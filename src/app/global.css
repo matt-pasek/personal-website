@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
@@ -20,7 +20,14 @@
 }
 
 body {
-  background: var(--background);
+  background: radial-gradient(
+    ellipse at center bottom,
+    rgba(140, 80, 255, 0.6) 0%,
+    rgba(100, 50, 220, 0.8) 25%,
+    rgba(60, 30, 150, 0.9) 50%,
+    rgba(30, 15, 80, 0.95) 75%,
+    #0a0515 100%
+  );
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }

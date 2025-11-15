@@ -11,7 +11,7 @@ const config: Config = {
   semi: true,
   plugins: ['prettier-plugin-tailwindcss'],
   endOfLine: 'crlf',
-  tailwindStylesheet: 'src/app/globals.css',
+  tailwindStylesheet: 'src/app/global.css',
 };
 
 export default config;
