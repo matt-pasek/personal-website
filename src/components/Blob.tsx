@@ -5,8 +5,11 @@ import { createNoise3D } from 'simplex-noise';
 import * as THREE from 'three';
 import { TextureLoader } from 'three';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
+import { useBlobState } from '@/contexts/BlobStateContext';
 
 const BlobMesh = () => {
+  const { updateState } = useBlobState();
+
   const SPEED = 0.001;
   const MIN_PROCESSING = 0.5;
   const BLOB_SIZE = 2;
@@ -50,6 +53,14 @@ const BlobMesh = () => {
     const time = performance.now() * 0.00001 * SPEED * Math.pow(dynamicProcessing, 3);
     const intensity = distanceFromCenter * 4;
     const spikes = (0.5 + intensity) * dynamicProcessing * 1.2;
+
+    updateState({
+      intensity,
+      mouseX,
+      mouseY,
+      processing: dynamicProcessing,
+      distanceFromCenter,
+    });
 
     const geometry = meshRef.current.geometry;
     const positionAttribute = geometry.attributes.position;

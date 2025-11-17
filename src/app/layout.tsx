@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './global.css';
 import { Navbar } from '@/components/Navbar';
+import Background from '@/components/Background';
+import { BlobStateProvider } from '@/contexts/BlobStateContext';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,8 +28,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <Navbar />
-        {children}
+        <BlobStateProvider>
+          <Background />
+          <Navbar />
+          {children}
+        </BlobStateProvider>
       </body>
     </html>
   );
