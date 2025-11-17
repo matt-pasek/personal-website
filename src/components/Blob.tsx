@@ -7,9 +7,10 @@ import { TextureLoader } from 'three';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 
 const BlobMesh = () => {
-  const SPEED = 0.0001;
-  const PROCESSING = 0.9;
+  const SPEED = 0.001;
+  const MIN_PROCESSING = 0.5;
   const BLOB_SIZE = 2;
+  const ROTATION_INFLUENCE = 0.01;
 
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const targetMouseRef = useRef({ x: 0.5, y: 0.5 });
@@ -43,9 +44,12 @@ const BlobMesh = () => {
     const mouseOffsetX = (mouseX - 0.5) * 2;
     const mouseOffsetY = (mouseY - 0.5) * 2;
 
-    const time = performance.now() * 0.00001 * SPEED * Math.pow(PROCESSING, 3);
-    const intensity = Math.sqrt(Math.pow(mouseX - 0.5, 2) + Math.pow(mouseY - 0.5, 2)) * 4;
-    const spikes = (0.5 + intensity) * PROCESSING * 1.2;
+    const distanceFromCenter = Math.sqrt(Math.pow(mouseX - 0.5, 2) + Math.pow(mouseY - 0.5, 2));
+    const dynamicProcessing = MIN_PROCESSING + 0.5 * (1 - Math.min(distanceFromCenter * 2, 1));
+
+    const time = performance.now() * 0.00001 * SPEED * Math.pow(dynamicProcessing, 3);
+    const intensity = distanceFromCenter * 4;
+    const spikes = (0.5 + intensity) * dynamicProcessing * 1.2;
 
     const geometry = meshRef.current.geometry;
     const positionAttribute = geometry.attributes.position;
@@ -65,8 +69,8 @@ const BlobMesh = () => {
     positionAttribute.needsUpdate = true;
     geometry.computeVertexNormals();
 
-    meshRef.current.rotation.x += 0.001;
-    meshRef.current.rotation.y += 0.001;
+    meshRef.current.rotation.x += 0.002 + (mouseY - 0.5) * ROTATION_INFLUENCE;
+    meshRef.current.rotation.y += 0.002 + (mouseX - 0.5) * ROTATION_INFLUENCE;
   });
 
   return (
