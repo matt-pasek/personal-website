@@ -1,8 +1,8 @@
 'use client';
 
-import { createContext, ReactNode, useContext, useState } from 'react';
+import { createContext, ReactNode, RefObject, useContext, useRef } from 'react';
 
-interface BlobState {
+export interface BlobState {
   intensity: number;
   mouseX: number;
   mouseY: number;
@@ -11,14 +11,14 @@ interface BlobState {
 }
 
 interface BlobStateContextType {
-  state: BlobState;
+  stateRef: RefObject<BlobState>;
   updateState: (updates: Partial<BlobState>) => void;
 }
 
 const BlobStateContext = createContext<BlobStateContextType | undefined>(undefined);
 
 export function BlobStateProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<BlobState>({
+  const stateRef = useRef<BlobState>({
     intensity: 0,
     mouseX: 0.5,
     mouseY: 0.5,
@@ -27,10 +27,10 @@ export function BlobStateProvider({ children }: { children: ReactNode }) {
   });
 
   const updateState = (updates: Partial<BlobState>) => {
-    setState((prev) => ({ ...prev, ...updates }));
+    Object.assign(stateRef.current, updates);
   };
 
-  return <BlobStateContext.Provider value={{ state, updateState }}>{children}</BlobStateContext.Provider>;
+  return <BlobStateContext.Provider value={{ stateRef, updateState }}>{children}</BlobStateContext.Provider>;
 }
 
 export function useBlobState() {
