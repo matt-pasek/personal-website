@@ -102,7 +102,7 @@ const BlobMesh = () => {
 
 const Blob = () => {
   return (
-    <div className="h-[750px] w-[750px]">
+    <div className="relative h-[750px] w-[750px] shrink-0">
       <Canvas
         camera={{ position: [0, 0, 3.5], fov: 45 }}
         gl={{
