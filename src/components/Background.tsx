@@ -15,17 +15,16 @@ export default function DynamicBackground() {
       const { intensity, processing } = stateRef.current;
 
       const pulseScale = 80 + intensity * 20;
-      const primaryOpacity = 0.6 + intensity * 0.2;
-      const glowIntensity = processing * 0.4;
+      const primaryOpacity = 0.3 + intensity * 0.15;
+      const glowIntensity = processing * 0.2;
 
       if (primaryRef.current) {
         primaryRef.current.style.background = `radial-gradient(
-          ellipse ${pulseScale}% ${pulseScale * 0.8}% at 50% 60%,
-          rgba(140, 80, 255, ${primaryOpacity}) 0%,
-          rgba(100, 50, 220, 0.8) 25%,
-          rgba(60, 30, 150, 0.9) 50%,
-          rgba(30, 15, 80, 0.95) 75%,
-          #0a0515 100%
+          ellipse ${pulseScale}% ${pulseScale * 0.8}% at 50% 50%,
+          rgba(100, 50, 200, ${primaryOpacity}) 0%,
+          rgba(70, 30, 160, ${primaryOpacity * 0.7}) 30%,
+          rgba(40, 15, 100, ${primaryOpacity * 0.4}) 60%,
+          transparent 100%
         )`;
       }
 
@@ -51,7 +50,7 @@ export default function DynamicBackground() {
           background: `radial-gradient(
             circle at 50% 50%,
             rgba(160, 100, 255, 0.3) 0%,
-            transparent 60%
+            transparent 80%
           )`,
         }}
       />
