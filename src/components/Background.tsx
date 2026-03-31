@@ -40,7 +40,7 @@ export default function DynamicBackground() {
   }, [stateRef]);
 
   return (
-    <div className="fixed inset-0 -z-10">
+    <div className="absolute top-0 right-0 left-0 -z-10 h-screen">
       <div className="absolute inset-0 bg-[#0a0515]" />
       <div ref={primaryRef} className="absolute inset-0" />
       <div
