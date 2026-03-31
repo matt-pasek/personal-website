@@ -6,13 +6,18 @@ export const Navbar = () => {
         <nav>
           <ul className="flex space-x-6">
             <li>
-              <a href="#" className="hover:text-gray-300">
-                Home
+              <a href="#about" className="transition-colors hover:text-[#C896FF]">
+                About
               </a>
             </li>
             <li>
-              <a href="#" className="hover:text-gray-300">
-                About
+              <a href="#work" className="transition-colors hover:text-[#C896FF]">
+                Work
+              </a>
+            </li>
+            <li>
+              <a href="#contact" className="transition-colors hover:text-[#C896FF]">
+                Contact
               </a>
             </li>
           </ul>
