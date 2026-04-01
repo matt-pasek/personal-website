@@ -19,7 +19,6 @@ export default function RootLayout({
     <html lang="en">
       <body className="antialiased">
         <BlobStateProvider>
-          <Background />
           <Navbar />
           {children}
         </BlobStateProvider>
