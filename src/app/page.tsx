@@ -80,7 +80,7 @@ export default function Home() {
               <div className="relative aspect-16/10 overflow-hidden border-r border-[#C896FF]/8">
                 <Image src={jain} alt="Preview of the JAIN 2.0 platform" fill className="object-cover" />
               </div>
-              <div className="p-8">
+              <div className="my-auto px-8">
                 <div className="mb-4 flex flex-wrap gap-2">
                   {['Frontend Development', 'UI Design', 'Design System'].map((tag) => (
                     <span
@@ -115,7 +115,7 @@ export default function Home() {
 
         <section id="currently" className="w-3/5 min-w-6xl py-20">
           <span className="mb-8 block text-xs tracking-[0.14em] text-[#C896FF]/45 uppercase">Currently</span>
-          <div className="flex items-center gap-10">
+          <div className="flex items-center justify-center gap-10">
             <div className="w-[220px] shrink-0 overflow-hidden rounded-xl border border-[#C896FF]/15 bg-[rgba(15,7,30,0.8)]">
               <div className="flex items-center gap-2 border-b border-[#C896FF]/10 px-3.5 py-3 text-[0.65rem] tracking-widest text-[#C896FF]/50 uppercase">
                 <span className="size-1.5 animate-pulse rounded-full bg-[#C896FF] shadow-[0_0_6px_rgba(200,150,255,0.8)]" />
@@ -151,8 +151,8 @@ export default function Home() {
 
         <div className="h-px w-3/5 min-w-6xl bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent" />
 
-        <section id="contact" className="flex w-3/5 min-w-6xl flex-col items-center py-[72px] text-center">
-          <p className="mb-7 text-[1.5rem] font-bold tracking-[-0.01em] text-white/60">
+        <section id="contact" className="flex w-3/5 min-w-6xl flex-col items-center gap-5 py-[72px] text-center">
+          <p className="text-[1.5rem] font-bold tracking-[-0.01em] text-white/60">
             Got something <span className="text-white">interesting?</span> Let&apos;s talk.
           </p>
           <a
@@ -161,7 +161,18 @@ export default function Home() {
           >
             Say hello →
           </a>
-          <span className="mt-4 text-[0.8rem] text-white/25">m_pasek@icloud.com</span>
+          <div className="mt-2 flex items-center gap-4 text-[0.8rem] text-white/25">
+            <span>m_pasek@icloud.com</span>
+            <span className="text-white/10">·</span>
+            <a
+              href="https://github.com/matt-pasek"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="transition-colors hover:text-white/50"
+            >
+              github.com/matt-pasek
+            </a>
+          </div>
         </section>
       </div>
     </main>
