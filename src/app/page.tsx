@@ -28,7 +28,7 @@ export default function Home() {
           <span className="absolute inset-0 animate-ping rounded-full border border-[#C896FF]/25 [animation-duration:2s]" />
           <span className="absolute inset-[3px] animate-ping rounded-full border border-[#C896FF]/15 [animation-delay:0.65s] [animation-duration:2s]" />
           <svg
-            className="relative size-3.5 animate-bounce text-[#C896FF]/55 [animation-duration:2.5s]"
+            className="relative size-3.5 text-[#C896FF]/55"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
