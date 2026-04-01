@@ -1,8 +1,13 @@
 import Blob from '@/components/Blob';
+import Image from 'next/image';
+import jain from '@/assets/images/jain.webp';
+import Background from '@/components/Background';
 
 export default function Home() {
   return (
     <main className="flex flex-col items-center">
+      <Background />
+
       <div className="relative z-10 grid min-h-screen w-3/5 min-w-6xl grid-cols-[1fr_500px_1fr] items-center gap-16 overflow-visible">
         <h1 className="z-10 flex flex-col items-start justify-center text-7xl leading-[0.95] font-bold tracking-[-0.02em] text-white">
           <div>Crafting</div>
@@ -66,18 +71,18 @@ export default function Home() {
         <div className="h-px w-3/5 min-w-6xl bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent" />
 
         <section id="work" className="w-3/5 min-w-6xl py-[72px]">
-          <div className="-mx-6 rounded-2xl bg-[rgba(15,7,30,0.5)] px-6 py-[72px]">
+          <div className="-mx-6 rounded-2xl bg-[rgba(15,7,30,0.5)] px-6">
             <div className="mb-9 flex items-baseline justify-between">
               <span className="text-xs tracking-[0.14em] text-[#C896FF]/45 uppercase">Work</span>
               <span className="text-[0.8rem] text-white/30">more coming soon</span>
             </div>
             <div className="grid grid-cols-2 overflow-hidden rounded-xl border border-[#C896FF]/12 bg-[rgba(10,5,21,0.6)]">
-              <div className="flex aspect-16/10 items-center justify-center border-r border-[#C896FF]/8 bg-linear-to-br from-[#936EDC]/25 via-[#8C50FF]/15 to-[#3C1E96]/30 text-[0.75rem] tracking-widest text-[#C896FF]/30">
-                [ JAIN 2.0 screenshot ]
+              <div className="relative aspect-16/10 overflow-hidden border-r border-[#C896FF]/8">
+                <Image src={jain} alt="Preview of the JAIN 2.0 platform" fill className="object-cover" />
               </div>
               <div className="p-8">
                 <div className="mb-4 flex flex-wrap gap-2">
-                  {['UI Design', 'Design System', 'Motion'].map((tag) => (
+                  {['Frontend Development', 'UI Design', 'Design System'].map((tag) => (
                     <span
                       key={tag}
                       className="rounded-full border border-[#C896FF]/20 px-2.5 py-0.5 text-[0.65rem] tracking-widest text-[#C896FF]/60 uppercase"
@@ -88,13 +93,18 @@ export default function Home() {
                 </div>
                 <h3 className="mb-2.5 text-[1.4rem] font-bold tracking-[-0.01em] text-white">JAIN 2.0</h3>
                 <p className="mb-6 text-[0.88rem] leading-[1.65] text-white/55">
-                  A full visual overhaul of the JAIN platform — rethinking hierarchy, motion, and experience from the
-                  ground up. Less noise, more meaning.
+                  A full visual overhaul of the JAIN platform — rethinking hierarchy, and experience from the ground up.
                 </p>
-                <span className="inline-flex cursor-not-allowed items-center gap-2 text-[0.82rem] text-[#C896FF]/40">
-                  View case study
-                  <span>→</span>
-                </span>
+                <a
+                  href="https://bluesoft.com/project/jain-ai-platform-supporting-leadership-development-at-biedronka"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="inline-flex items-center gap-2 text-[0.82rem] text-[#C896FF]/40 transition-colors hover:text-[#C896FF]/70">
+                    View case study
+                    <span>→</span>
+                  </span>
+                </a>
               </div>
             </div>
             <div className="mt-5 text-center text-[0.8rem] text-white/20">· · ·</div>
