@@ -2,6 +2,7 @@ import Blob from '@/components/Blob';
 import Image from 'next/image';
 import jain from '@/assets/images/jain.webp';
 import Background from '@/components/Background';
+import NowPlaying from '@/components/NowPlaying';
 
 export default function Home() {
   return (
@@ -124,24 +125,7 @@ export default function Home() {
         <section id="currently" className="w-full px-6 py-12 md:w-3/5 md:min-w-6xl md:px-0 md:py-20">
           <span className="mb-8 block text-xs tracking-[0.14em] text-[#C896FF]/45 uppercase">Currently</span>
           <div className="flex flex-col items-center gap-8 md:flex-row md:justify-center md:gap-10">
-            <div className="w-[220px] shrink-0 overflow-hidden rounded-xl border border-[#C896FF]/15 bg-[rgba(15,7,30,0.8)]">
-              <div className="flex items-center gap-2 border-b border-[#C896FF]/10 px-3.5 py-3 text-[0.65rem] tracking-widest text-[#C896FF]/50 uppercase">
-                <span className="size-1.5 animate-pulse rounded-full bg-[#C896FF] shadow-[0_0_6px_rgba(200,150,255,0.8)]" />
-                Now playing
-              </div>
-              <div className="flex items-center gap-3 px-3.5 py-3.5">
-                <div className="flex size-[38px] shrink-0 items-center justify-center rounded-md bg-linear-to-br from-[#8C50FF]/50 to-[#3C1E96]/60 text-sm">
-                  ♪
-                </div>
-                <div className="min-w-0">
-                  <div className="truncate text-[0.8rem] font-semibold text-white">Song Title</div>
-                  <div className="truncate text-[0.72rem] text-white/45">Artist Name</div>
-                </div>
-              </div>
-              <p className="px-3.5 pb-3.5 text-[0.68rem] leading-snug text-[#C896FF]/35 italic">
-                live via Last.fm — what&apos;s actually on right now
-              </p>
-            </div>
+            <NowPlaying />
             <div>
               <h3 className="mb-2.5 text-[1.5rem] font-bold tracking-[-0.01em] text-white">
                 What I&apos;m listening to
@@ -150,9 +134,6 @@ export default function Home() {
                 Music is always on. This pulls live from Last.fm — a small window into whatever&apos;s soundtracking the
                 work.
               </p>
-              <span className="mt-3.5 inline-block rounded-full border border-dashed border-[#C896FF]/25 px-3 py-1 text-[0.68rem] tracking-widest text-[#C896FF]/50 uppercase">
-                ✦ live data, coming soon
-              </span>
             </div>
           </div>
         </section>

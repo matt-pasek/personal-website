@@ -21,3 +21,78 @@ body {
   color: var(--foreground);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
+
+/* NowPlaying component animations */
+@keyframes np-bloom {
+  0%,
+  100% {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+@keyframes np-border-glow {
+  0%,
+  100% {
+    border-color: rgba(200, 150, 255, 0.08);
+    box-shadow: none;
+  }
+  50% {
+    border-color: rgba(200, 150, 255, 0.25);
+    box-shadow: 0 0 18px rgba(140, 80, 255, 0.15);
+  }
+}
+@keyframes np-dot-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 4px rgba(200, 150, 255, 0.6);
+  }
+  50% {
+    box-shadow:
+      0 0 10px rgba(200, 150, 255, 1),
+      0 0 20px rgba(140, 80, 255, 0.7);
+  }
+}
+@keyframes np-b1 {
+  from {
+    height: 30%;
+  }
+  to {
+    height: 85%;
+  }
+}
+@keyframes np-b2 {
+  from {
+    height: 65%;
+  }
+  to {
+    height: 20%;
+  }
+}
+@keyframes np-b3 {
+  from {
+    height: 45%;
+  }
+  to {
+    height: 100%;
+  }
+}
+@keyframes np-b4 {
+  from {
+    height: 80%;
+  }
+  to {
+    height: 25%;
+  }
+}
+@keyframes np-b5 {
+  from {
+    height: 35%;
+  }
+  to {
+    height: 75%;
+  }
+}
