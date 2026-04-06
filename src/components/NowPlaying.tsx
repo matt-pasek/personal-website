@@ -4,21 +4,28 @@ import { useState, useEffect, ReactNode } from 'react';
 import Image from 'next/image';
 import { NowPlayingResponse } from '@/types/now-playing';
 
+const POLL_INTERVAL_MS = 2 * 60 * 1000;
+
 export default function NowPlaying() {
   const [data, setData] = useState<NowPlayingResponse | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/now-playing')
-      .then((res) => res.json())
-      .then((json: NowPlayingResponse) => setData(json))
-      .catch(() => setData(null))
-      .finally(() => setLoading(false));
+    const fetchData = () =>
+      fetch('/api/now-playing')
+        .then((res) => res.json())
+        .then((json: NowPlayingResponse) => setData(json))
+        .catch(() => setData(null))
+        .finally(() => setLoading(false));
+
+    void fetchData();
+    const interval = setInterval(fetchData, POLL_INTERVAL_MS);
+    return () => clearInterval(interval);
   }, []);
 
   if (loading || !data) return null;
 
-  return data.nowPlaying ? <NowPlayingLive data={data} /> : <LastPlayed data={data} />;
+  return data.nowPlaying ? <NowPlayingLive key={data.name} data={data} /> : <LastPlayed key={data.name} data={data} />;
 }
 
 interface PlayerCardProps {
@@ -36,7 +43,7 @@ function PlayerCard({ data, statusPill, eqBars, footer, glowActive }: PlayerCard
       target="_blank"
       rel="noopener noreferrer"
       className="relative block w-full shrink-0 overflow-hidden rounded-xl md:w-[400px]"
-      style={{ background: '#0a0318' }}
+      style={{ background: '#0a0318', animation: 'np-fade-in 0.5s ease' }}
     >
       <div className="absolute inset-0 overflow-hidden rounded-xl">
         {data.imageUrl && (
@@ -48,6 +55,7 @@ function PlayerCard({ data, statusPill, eqBars, footer, glowActive }: PlayerCard
             style={{ filter: 'blur(18px) saturate(0.6)', opacity: 0.3 }}
           />
         )}
+        <div className="absolute inset-0" style={{ background: 'rgba(140,80,255,0.15)', mixBlendMode: 'color' }} />
         <div
           className="absolute inset-0"
           style={{ background: 'linear-gradient(135deg, rgba(10,3,24,0.85), rgba(10,3,24,0.7))' }}
@@ -76,14 +84,16 @@ function PlayerCard({ data, statusPill, eqBars, footer, glowActive }: PlayerCard
 
         <div className="flex items-center gap-3">
           {data.imageUrl ? (
-            <Image
-              src={data.imageUrl}
-              alt={data.album}
-              width={52}
-              height={52}
-              className="shrink-0 rounded-md object-cover"
+            <div
+              className="relative size-[52px] shrink-0 overflow-hidden rounded-md"
               style={{ border: '1px solid rgba(200,150,255,0.15)' }}
-            />
+            >
+              <Image src={data.imageUrl} alt={data.album} fill className="object-cover" />
+              <div
+                className="absolute inset-0"
+                style={{ background: 'rgba(140,80,255,0.25)', mixBlendMode: 'color' }}
+              />
+            </div>
           ) : (
             <div
               className="flex size-[52px] shrink-0 items-center justify-center rounded-md text-lg"
@@ -121,7 +131,7 @@ function PlayerCard({ data, statusPill, eqBars, footer, glowActive }: PlayerCard
 function NowPlayingLive({ data }: { data: NowPlayingResponse }) {
   const statusPill = (
     <div
-      className="mb-3 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1"
+      className="mb-3 inline-flex items-center gap-2.5 rounded-full border px-2.5 py-1"
       style={{
         background: 'rgba(200,150,255,0.08)',
         borderColor: 'rgba(200,150,255,0.2)',
@@ -156,7 +166,7 @@ function NowPlayingLive({ data }: { data: NowPlayingResponse }) {
 function LastPlayed({ data }: { data: NowPlayingResponse }) {
   const statusPill = (
     <div
-      className="mb-3 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1"
+      className="mb-3 inline-flex items-center gap-2.5 rounded-full border px-2.5 py-1"
       style={{
         background: 'rgba(200,150,255,0.04)',
         borderColor: 'rgba(200,150,255,0.1)',
