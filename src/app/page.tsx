@@ -148,13 +148,13 @@ export default function Home() {
             Got something <span className="text-white">interesting?</span> Let&apos;s talk.
           </p>
           <a
-            href="mailto:m_pasek@icloud.com"
+            href="mailto:contact@matt-pasek.dev"
             className="inline-flex items-center gap-2.5 rounded-full border border-[#C896FF]/35 bg-linear-to-br from-[#8C50FF]/25 to-[#6432DC]/20 px-7 py-3 text-[0.9rem] text-[#C896FF]/90 transition-all hover:-translate-y-px hover:border-[#C896FF]/60 hover:text-[#C896FF]"
           >
             Say hello →
           </a>
           <div className="mt-2 flex items-center gap-4 text-[0.8rem] text-white/25">
-            <span>m_pasek@icloud.com</span>
+            <span>contact@matt-pasek.dev</span>
             <span className="text-white/10">·</span>
             <a
               href="https://github.com/matt-pasek"
@@ -166,6 +166,19 @@ export default function Home() {
             </a>
           </div>
         </section>
+        <footer className="w-full px-6 py-5 md:px-0">
+          <div className="mx-auto flex w-full flex-col items-center gap-1 md:w-3/5 md:min-w-6xl md:flex-row md:justify-between">
+            <span className="text-[0.72rem] text-white/20">
+              © {new Date().getFullYear()} Mateusz Pasek. All rights reserved.
+            </span>
+            <a
+              href="https://matt-pasek.dev"
+              className="text-[0.72rem] text-white/20 transition-colors hover:text-white/40"
+            >
+              matt-pasek.dev
+            </a>
+          </div>
+        </footer>
       </div>
     </main>
   );

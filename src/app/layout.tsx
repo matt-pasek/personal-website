@@ -5,7 +5,7 @@ import { BlobStateProvider } from '@/contexts/BlobStateContext';
 import { ReactNode } from 'react';
 import { Analytics } from '@vercel/analytics/next';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://mateuszpasek.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://matt-pasek.dev';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
