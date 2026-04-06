@@ -3,6 +3,7 @@ import './global.css';
 import { Navbar } from '@/components/Navbar';
 import { BlobStateProvider } from '@/contexts/BlobStateContext';
 import { ReactNode } from 'react';
+import { Analytics } from '@vercel/analytics/next';
 
 export const metadata: Metadata = {
   title: 'Homepage | Mateusz Pasek',
@@ -21,6 +22,7 @@ export default function RootLayout({
           <Navbar />
           {children}
         </BlobStateProvider>
+        <Analytics />
       </body>
     </html>
   );
