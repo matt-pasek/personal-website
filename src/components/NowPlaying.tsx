@@ -59,6 +59,48 @@ export default function NowPlaying() {
   );
 }
 
+function AlbumCover({ url, alt }: { url: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false);
+
+  if (!url) {
+    return (
+      <div
+        className="flex size-[52px] shrink-0 items-center justify-center rounded-md text-lg"
+        style={{
+          background: 'linear-gradient(135deg, rgba(140,80,255,0.3), rgba(60,30,150,0.4))',
+          border: '1px solid rgba(200,150,255,0.15)',
+        }}
+      >
+        ♪
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="relative size-[52px] shrink-0 overflow-hidden rounded-md"
+      style={{ border: '1px solid rgba(200,150,255,0.15)' }}
+    >
+      {!loaded && (
+        <div
+          className="absolute inset-0 animate-pulse"
+          style={{ background: 'linear-gradient(135deg, rgba(140,80,255,0.2), rgba(60,30,150,0.3))' }}
+        />
+      )}
+      <Image
+        src={url}
+        alt={alt}
+        fill
+        priority
+        className="object-cover transition-opacity duration-300"
+        style={{ opacity: loaded ? 1 : 0 }}
+        onLoad={() => setLoaded(true)}
+      />
+      <div className="absolute inset-0" style={{ background: 'rgba(140,80,255,0.25)', mixBlendMode: 'color' }} />
+    </div>
+  );
+}
+
 interface PlayerCardProps {
   data: NowPlayingResponse;
   statusPill: ReactNode;
@@ -83,6 +125,7 @@ function PlayerCard({ data, statusPill, eqBars, footer, glowActive }: PlayerCard
       <div className="absolute inset-0 overflow-hidden rounded-xl">
         {data.imageUrl && (
           <Image
+            unoptimized
             src={data.imageUrl}
             alt=""
             fill
@@ -118,28 +161,7 @@ function PlayerCard({ data, statusPill, eqBars, footer, glowActive }: PlayerCard
         {statusPill}
 
         <div className="flex items-center gap-3">
-          {data.imageUrl ? (
-            <div
-              className="relative size-[52px] shrink-0 overflow-hidden rounded-md"
-              style={{ border: '1px solid rgba(200,150,255,0.15)' }}
-            >
-              <Image src={data.imageUrl} alt={data.album} fill className="object-cover" />
-              <div
-                className="absolute inset-0"
-                style={{ background: 'rgba(140,80,255,0.25)', mixBlendMode: 'color' }}
-              />
-            </div>
-          ) : (
-            <div
-              className="flex size-[52px] shrink-0 items-center justify-center rounded-md text-lg"
-              style={{
-                background: 'linear-gradient(135deg, rgba(140,80,255,0.3), rgba(60,30,150,0.4))',
-                border: '1px solid rgba(200,150,255,0.15)',
-              }}
-            >
-              ♪
-            </div>
-          )}
+          <AlbumCover url={data.thumbnailUrl} alt={data.album} />
           <div className="min-w-0 flex-1">
             <div className="flex items-end justify-between gap-2">
               <div className="min-w-0">

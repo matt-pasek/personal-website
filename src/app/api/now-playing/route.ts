@@ -15,6 +15,9 @@ export async function GET(): Promise<NextResponse<NowPlayingResponse>> {
     name: track.name,
     artist: track.artist['#text'],
     imageUrl:
+      track.image.map((img) => img['#text']).find((url) => url.includes('174s')) ??
+      track.image[track.image.length - 1]['#text'],
+    thumbnailUrl:
       track.image.map((img) => img['#text']).find((url) => url.includes('300x300')) ??
       track.image[track.image.length - 1]['#text'],
     album: track.album['#text'],
