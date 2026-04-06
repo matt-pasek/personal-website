@@ -88,7 +88,7 @@ const BlobMesh = ({ isMobile }: { isMobile: boolean }) => {
 
     const effectiveSpikes = isMobile ? 1.1 : spikes;
     const effectiveAmplitude = isMobile ? 0.34 : 0.3;
-    const rotationSpeed = isMobile ? 0.0004 : 0.002;
+    const rotationSpeed = 0.002;
 
     const positionAttribute = meshRef.current.geometry.attributes.position;
     const vertex = new THREE.Vector3();
