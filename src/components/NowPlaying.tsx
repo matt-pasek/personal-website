@@ -2,9 +2,36 @@
 
 import { useState, useEffect, ReactNode } from 'react';
 import Image from 'next/image';
+import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import { NowPlayingResponse } from '@/types/now-playing';
 
 const POLL_INTERVAL_MS = 2 * 60 * 1000;
+
+const cardVariants: Variants = {
+  initial: {
+    opacity: 0,
+    filter: 'blur(16px) saturate(1.6) brightness(1.2)',
+    scale: 0.95,
+  },
+  animate: {
+    opacity: 1,
+    filter: 'blur(0px) saturate(1) brightness(1)',
+    scale: 1,
+    transition: {
+      duration: 0.6,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    },
+  },
+  exit: {
+    opacity: 0,
+    filter: 'blur(10px) saturate(0.8)',
+    scale: 0.97,
+    transition: {
+      duration: 0.3,
+      ease: [0.4, 0, 1, 1],
+    },
+  },
+};
 
 export default function NowPlaying() {
   const [data, setData] = useState<NowPlayingResponse | null>(null);
@@ -25,7 +52,11 @@ export default function NowPlaying() {
 
   if (loading || !data) return null;
 
-  return data.nowPlaying ? <NowPlayingLive key={data.name} data={data} /> : <LastPlayed key={data.name} data={data} />;
+  return (
+    <AnimatePresence mode="wait">
+      {data.nowPlaying ? <NowPlayingLive key={data.name} data={data} /> : <LastPlayed key={data.name} data={data} />}
+    </AnimatePresence>
+  );
 }
 
 interface PlayerCardProps {
@@ -38,12 +69,16 @@ interface PlayerCardProps {
 
 function PlayerCard({ data, statusPill, eqBars, footer, glowActive }: PlayerCardProps) {
   return (
-    <a
+    <motion.a
       href={data.songUrl}
       target="_blank"
       rel="noopener noreferrer"
       className="relative block w-full shrink-0 overflow-hidden rounded-xl md:w-[400px]"
-      style={{ background: '#0a0318', animation: 'np-fade-in 0.5s ease' }}
+      style={{ background: '#0a0318' }}
+      variants={cardVariants}
+      initial="initial"
+      animate="animate"
+      exit="exit"
     >
       <div className="absolute inset-0 overflow-hidden rounded-xl">
         {data.imageUrl && (
@@ -124,7 +159,7 @@ function PlayerCard({ data, statusPill, eqBars, footer, glowActive }: PlayerCard
           </div>
         </div>
       </div>
-    </a>
+    </motion.a>
   );
 }
 
