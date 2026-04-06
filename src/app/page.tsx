@@ -8,22 +8,27 @@ export default function Home() {
     <main className="flex flex-col items-center">
       <Background />
 
-      <div className="relative z-10 grid min-h-screen w-3/5 min-w-6xl grid-cols-[1fr_500px_1fr] items-center gap-16 overflow-visible">
-        <h1 className="z-10 flex flex-col items-start justify-center text-7xl leading-[0.95] font-bold tracking-[-0.02em] text-white">
+      <div className="relative z-10 flex min-h-screen w-full flex-col overflow-hidden px-6 pt-20 md:grid md:w-3/5 md:min-w-6xl md:grid-cols-[1fr_500px_1fr] md:items-center md:gap-16 md:overflow-visible md:px-0 md:pt-0">
+        <div className="z-10 pb-5 text-xs font-bold tracking-[0.18em] text-white/45 uppercase md:hidden">
+          Mateusz Pasek
+        </div>
+        <h1 className="z-10 flex flex-col items-start text-5xl leading-[0.95] font-bold tracking-[-0.02em] text-white md:justify-center md:text-7xl">
           <div>Crafting</div>
           <div>narrative</div>
           <div className="opacity-60">through</div>
           <div className="bg-linear-to-tr from-[#C896FF] to-[#936EDC] bg-clip-text pb-3 text-transparent">design</div>
         </h1>
-        <div className="relative flex items-center justify-center overflow-visible">
+        <div className="absolute right-0 bottom-0 z-0 translate-x-1/3 translate-y-1/6 md:relative md:flex md:translate-x-0 md:translate-y-0 md:items-center md:justify-center md:overflow-visible">
           <Blob />
         </div>
-        <div className="flex w-full justify-end">
-          <p className="w-64 text-right text-lg">I believe good design is key to building strong connections.</p>
+        <div className="relative flex w-full justify-start md:mt-0 md:justify-end">
+          <p className="max-w-[260px] text-left text-base text-white/60 md:w-64 md:max-w-none md:text-right md:text-lg md:text-white">
+            I believe good design is key to building strong connections.
+          </p>
         </div>
       </div>
 
-      <div className="absolute bottom-8 flex flex-col items-center gap-2.5 select-none">
+      <div className="absolute bottom-8 z-10 flex flex-col items-center gap-2.5 select-none">
         <div className="relative flex size-9 items-center justify-center">
           <span className="absolute inset-0 animate-ping rounded-full border border-[#C896FF]/25 [animation-duration:2s]" />
           <span className="absolute inset-[3px] animate-ping rounded-full border border-[#C896FF]/15 [animation-delay:0.65s] [animation-duration:2s]" />
@@ -41,8 +46,11 @@ export default function Home() {
       </div>
 
       <div className="flex w-full flex-col items-center bg-[#0d0520]">
-        <div className="h-px w-3/5 min-w-6xl bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent" />
-        <section id="about" className="grid w-3/5 min-w-6xl grid-cols-2 gap-16 py-20">
+        <div className="h-px w-full bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent md:w-3/5 md:min-w-6xl" />
+        <section
+          id="about"
+          className="grid w-full grid-cols-1 gap-8 px-6 py-12 md:w-3/5 md:min-w-6xl md:grid-cols-2 md:gap-16 md:px-0 md:py-20"
+        >
           <div>
             <span className="mb-5 block text-xs tracking-[0.14em] text-[#C896FF]/45 uppercase">About</span>
             <h2 className="text-[1.85rem] leading-[1.2] font-bold tracking-[-0.02em] text-white">
@@ -68,19 +76,19 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="h-px w-3/5 min-w-6xl bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent" />
+        <div className="h-px w-full bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent md:w-3/5 md:min-w-6xl" />
 
-        <section id="work" className="w-3/5 min-w-6xl py-[72px]">
-          <div className="-mx-6 rounded-2xl bg-[rgba(15,7,30,0.5)] px-6">
+        <section id="work" className="w-full px-6 py-12 md:w-3/5 md:min-w-6xl md:px-0 md:py-[72px]">
+          <div className="-mx-6 rounded-2xl bg-[rgba(15,7,30,0.5)] px-6 md:mx-0">
             <div className="mb-9 flex items-baseline justify-between">
               <span className="text-xs tracking-[0.14em] text-[#C896FF]/45 uppercase">Work</span>
               <span className="text-[0.8rem] text-white/30">more coming soon</span>
             </div>
-            <div className="grid grid-cols-2 overflow-hidden rounded-xl border border-[#C896FF]/12 bg-[rgba(10,5,21,0.6)]">
-              <div className="relative aspect-16/10 overflow-hidden border-r border-[#C896FF]/8">
+            <div className="grid grid-cols-1 overflow-hidden rounded-xl border border-[#C896FF]/12 bg-[rgba(10,5,21,0.6)] md:grid-cols-2">
+              <div className="relative aspect-video overflow-hidden border-b border-[#C896FF]/8 md:aspect-16/10 md:border-r md:border-b-0">
                 <Image src={jain} alt="Preview of the JAIN 2.0 platform" fill className="object-cover" />
               </div>
-              <div className="my-auto px-8">
+              <div className="my-auto px-5 py-6 md:px-8 md:py-0">
                 <div className="mb-4 flex flex-wrap gap-2">
                   {['Frontend Development', 'UI Design', 'Design System'].map((tag) => (
                     <span
@@ -111,11 +119,11 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="h-px w-3/5 min-w-6xl bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent" />
+        <div className="h-px w-full bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent md:w-3/5 md:min-w-6xl" />
 
-        <section id="currently" className="w-3/5 min-w-6xl py-20">
+        <section id="currently" className="w-full px-6 py-12 md:w-3/5 md:min-w-6xl md:px-0 md:py-20">
           <span className="mb-8 block text-xs tracking-[0.14em] text-[#C896FF]/45 uppercase">Currently</span>
-          <div className="flex items-center justify-center gap-10">
+          <div className="flex flex-col items-center gap-8 md:flex-row md:justify-center md:gap-10">
             <div className="w-[220px] shrink-0 overflow-hidden rounded-xl border border-[#C896FF]/15 bg-[rgba(15,7,30,0.8)]">
               <div className="flex items-center gap-2 border-b border-[#C896FF]/10 px-3.5 py-3 text-[0.65rem] tracking-widest text-[#C896FF]/50 uppercase">
                 <span className="size-1.5 animate-pulse rounded-full bg-[#C896FF] shadow-[0_0_6px_rgba(200,150,255,0.8)]" />
@@ -149,9 +157,12 @@ export default function Home() {
           </div>
         </section>
 
-        <div className="h-px w-3/5 min-w-6xl bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent" />
+        <div className="h-px w-full bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent md:w-3/5 md:min-w-6xl" />
 
-        <section id="contact" className="flex w-3/5 min-w-6xl flex-col items-center gap-5 py-[72px] text-center">
+        <section
+          id="contact"
+          className="flex w-full flex-col items-center gap-5 px-6 py-12 text-center md:w-3/5 md:min-w-6xl md:px-0 md:py-[72px]"
+        >
           <p className="text-[1.5rem] font-bold tracking-[-0.01em] text-white/60">
             Got something <span className="text-white">interesting?</span> Let&apos;s talk.
           </p>

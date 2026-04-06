@@ -1,13 +1,28 @@
 'use client';
 
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { createNoise3D } from 'simplex-noise';
 import * as THREE from 'three';
 import { TextureLoader } from 'three';
 import { Canvas, useFrame, useLoader } from '@react-three/fiber';
 import { useBlobState } from '@/contexts/BlobStateContext';
 
-const BlobMesh = () => {
+function useMediaQuery(query: string): boolean {
+  const [matches, setMatches] = useState(() =>
+    typeof window !== 'undefined' ? window.matchMedia(query).matches : false,
+  );
+
+  useEffect(() => {
+    const mql = window.matchMedia(query);
+    const handler = (e: MediaQueryListEvent) => setMatches(e.matches);
+    mql.addEventListener('change', handler);
+    return () => mql.removeEventListener('change', handler);
+  }, [query]);
+
+  return matches;
+}
+
+const BlobMesh = ({ isMobile }: { isMobile: boolean }) => {
   const { updateState } = useBlobState();
 
   const SPEED = 0.001;
@@ -18,7 +33,7 @@ const BlobMesh = () => {
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const targetMouseRef = useRef({ x: 0.5, y: 0.5 });
   const meshRef = useRef<THREE.Mesh>(null);
-  const noise3D = createNoise3D();
+  const noise3D = useRef(createNoise3D()).current;
 
   const envMap = useLoader(TextureLoader, '/original_texture.jpeg');
   envMap.setValues({
@@ -26,7 +41,16 @@ const BlobMesh = () => {
     colorSpace: THREE.SRGBColorSpace,
   });
 
+  const segments = isMobile ? 64 : 128;
+  const geometry = useMemo(() => new THREE.SphereGeometry(BLOB_SIZE, segments, segments), [segments]);
+
   useEffect(() => {
+    return () => geometry.dispose();
+  }, [geometry]);
+
+  useEffect(() => {
+    if (isMobile) return;
+
     const handleMouseMove = (e: MouseEvent) => {
       targetMouseRef.current.x = e.clientX / window.innerWidth;
       targetMouseRef.current.y = e.clientY / window.innerHeight;
@@ -34,7 +58,7 @@ const BlobMesh = () => {
 
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
+  }, [isMobile]);
 
   useFrame(() => {
     if (!meshRef.current) return;
@@ -62,8 +86,11 @@ const BlobMesh = () => {
       distanceFromCenter,
     });
 
-    const geometry = meshRef.current.geometry;
-    const positionAttribute = geometry.attributes.position;
+    const effectiveSpikes = isMobile ? 1.1 : spikes;
+    const effectiveAmplitude = isMobile ? 0.34 : 0.3;
+    const rotationSpeed = isMobile ? 0.0004 : 0.002;
+
+    const positionAttribute = meshRef.current.geometry.attributes.position;
     const vertex = new THREE.Vector3();
 
     for (let i = 0; i < positionAttribute.count; i++) {
@@ -72,21 +99,25 @@ const BlobMesh = () => {
         .normalize()
         .multiplyScalar(
           1 +
-            0.3 * noise3D(vertex.x * spikes + mouseOffsetX, vertex.y * spikes + mouseOffsetY, vertex.z * spikes + time),
+            effectiveAmplitude *
+              noise3D(
+                vertex.x * effectiveSpikes + mouseOffsetX,
+                vertex.y * effectiveSpikes + mouseOffsetY,
+                vertex.z * effectiveSpikes + time,
+              ),
         );
       positionAttribute.setXYZ(i, vertex.x, vertex.y, vertex.z);
     }
 
     positionAttribute.needsUpdate = true;
-    geometry.computeVertexNormals();
+    meshRef.current.geometry.computeVertexNormals();
 
-    meshRef.current.rotation.x += 0.002 + (mouseY - 0.5) * ROTATION_INFLUENCE;
-    meshRef.current.rotation.y += 0.002 + (mouseX - 0.5) * ROTATION_INFLUENCE;
+    meshRef.current.rotation.x += rotationSpeed + (mouseY - 0.5) * ROTATION_INFLUENCE;
+    meshRef.current.rotation.y += rotationSpeed + (mouseX - 0.5) * ROTATION_INFLUENCE;
   });
 
   return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[BLOB_SIZE, 128, 128]} />
+    <mesh ref={meshRef} geometry={geometry}>
       <meshPhongMaterial
         emissive={0x4a148c}
         emissiveIntensity={0.2}
@@ -101,8 +132,10 @@ const BlobMesh = () => {
 };
 
 const Blob = () => {
+  const isMobile = useMediaQuery('(max-width: 767px)');
+
   return (
-    <div className="relative h-[750px] w-[750px] shrink-0">
+    <div className="h-[600px] w-[600px] shrink-0 overflow-visible md:h-[750px] md:w-[750px]">
       <Canvas
         camera={{ position: [0, 0, 3.5], fov: 45 }}
         gl={{
@@ -119,7 +152,7 @@ const Blob = () => {
         <ambientLight color={0xa064f0} intensity={0.4} />
 
         <Suspense fallback={null}>
-          <BlobMesh />
+          <BlobMesh isMobile={isMobile} />
         </Suspense>
       </Canvas>
     </div>
