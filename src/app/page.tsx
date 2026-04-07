@@ -2,7 +2,7 @@ import Blob from '@/components/Blob';
 import Image from 'next/image';
 import jain from '@/assets/images/jain.webp';
 import Background from '@/components/Background';
-import NowPlaying from '@/components/NowPlaying';
+import CurrentlySection from '@/components/currently/CurrentlySection';
 
 export default function Home() {
   return (
@@ -122,20 +122,9 @@ export default function Home() {
 
         <div className="h-px w-full bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent md:w-3/5 md:min-w-6xl" />
 
-        <section id="currently" className="w-full px-6 py-12 md:w-3/5 md:min-w-6xl md:px-0 md:py-20">
+        <section id="currently" className="mx-auto px-6 py-12 md:px-0 md:py-20">
           <span className="mb-8 block text-xs tracking-[0.14em] text-[#C896FF]/45 uppercase">Currently</span>
-          <div className="flex flex-col items-center gap-8 md:flex-row md:justify-center md:gap-10">
-            <NowPlaying />
-            <div>
-              <h3 className="mb-2.5 text-[1.5rem] font-bold tracking-[-0.01em] text-white">
-                What I&apos;m listening to
-              </h3>
-              <p className="max-w-sm text-[0.9rem] leading-[1.7] text-white/50">
-                Music is always on. This pulls live from Last.fm — a small window into whatever&apos;s soundtracking the
-                work.
-              </p>
-            </div>
-          </div>
+          <CurrentlySection />
         </section>
 
         <div className="h-px w-full bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent md:w-3/5 md:min-w-6xl" />
