@@ -14,17 +14,20 @@ export default function Home() {
           Mateusz Pasek
         </div>
         <h1 className="z-10 flex flex-col items-start text-5xl leading-[0.95] font-bold tracking-[-0.02em] text-white md:justify-center md:text-7xl">
-          <div>Crafting</div>
-          <div>narrative</div>
-          <div className="opacity-60">through</div>
-          <div className="bg-linear-to-tr from-[#C896FF] to-[#936EDC] bg-clip-text pb-3 text-transparent">design</div>
+          <div>Designer</div>
+          <div className="bg-linear-to-tr from-[#C896FF] to-[#936EDC] bg-clip-text pb-3 text-transparent">by eye,</div>
+          <div>
+            dev <span className="opacity-60">by</span>
+          </div>
+          <div className="bg-linear-to-tr from-[#C896FF] to-[#936EDC] bg-clip-text pb-3 text-transparent">hand.</div>
         </h1>
         <div className="absolute right-0 bottom-0 z-0 translate-x-1/3 translate-y-1/6 md:relative md:flex md:translate-x-0 md:translate-y-0 md:items-center md:justify-center md:overflow-visible">
           <Blob />
         </div>
         <div className="relative flex w-full justify-start md:mt-0 md:justify-end">
           <p className="max-w-[260px] text-left text-base text-white/60 md:w-64 md:max-w-none md:text-right md:text-lg md:text-white">
-            I believe good design is key to building strong connections.
+            Creative developer. Enterprise background. Currently studying in Finland and building things I actually care
+            about.
           </p>
         </div>
       </div>
@@ -70,6 +73,10 @@ export default function Home() {
             <p className="mt-3.5 text-[0.95rem] leading-[1.75] text-white/60">
               Currently building things that feel right, not just things that work.
             </p>
+            <p className="text-[0.95rem] leading-[1.75] text-white/60">
+              I got into this industry before finishing high school. Worked with enterprise clients. Moved to Finland to
+              study. Still building things that feel right, not just things that work.
+            </p>
             <div className="mt-7 inline-flex items-center gap-2 text-[0.8rem] text-[#C896FF]/70">
               <span className="size-[7px] animate-pulse rounded-full bg-[#C896FF] shadow-[0_0_8px_rgba(200,150,255,0.8)]" />
               Open to the right opportunities
@@ -100,9 +107,11 @@ export default function Home() {
                     </span>
                   ))}
                 </div>
-                <h3 className="mb-2.5 text-[1.4rem] font-bold tracking-[-0.01em] text-white">JAIN 2.0</h3>
+                <h3 className="mb-2.5 text-[1.4rem] font-bold tracking-[-0.01em] text-white">jAIn 2.0</h3>
                 <p className="mb-6 text-[0.88rem] leading-[1.65] text-white/55">
-                  A full visual overhaul of the JAIN platform — rethinking hierarchy, and experience from the ground up.
+                  Solo frontend developer and UI designer on an AI-powered HR platform built for Jeronimo Martins.
+                  Responsible for the full frontend layer: architecture, design system and every user-facing feature.
+                  Now in active use across the organisation.
                 </p>
                 <a
                   href="https://bluesoft.com/project/jain-ai-platform-supporting-leadership-development-at-biedronka"
@@ -134,7 +143,7 @@ export default function Home() {
           className="flex w-full flex-col items-center gap-5 px-6 py-12 text-center md:w-3/5 md:min-w-6xl md:px-0 md:py-[72px]"
         >
           <p className="text-[1.5rem] font-bold tracking-[-0.01em] text-white/60">
-            Got something <span className="text-white">interesting?</span> Let&apos;s talk.
+            Got something <span className="text-white">worth building?</span> I&apos;m listening.
           </p>
           <a
             href="mailto:contact@matt-pasek.dev"

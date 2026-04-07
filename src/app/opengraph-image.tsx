@@ -67,9 +67,7 @@ export default function OgImage() {
               flexDirection: 'column',
             }}
           >
-            <span style={{ display: 'flex', color: '#fff' }}>Crafting</span>
-            <span style={{ display: 'flex', color: '#fff' }}>narrative</span>
-            <span style={{ display: 'flex', color: 'rgba(255,255,255,0.4)' }}>through</span>
+            <span style={{ display: 'flex', color: '#fff' }}>Designer</span>
             <span
               style={{
                 display: 'flex',
@@ -79,7 +77,19 @@ export default function OgImage() {
                 paddingBottom: 8,
               }}
             >
-              design
+              by eye,
+            </span>
+            <span style={{ display: 'flex', color: '#fff' }}>dev by</span>
+            <span
+              style={{
+                display: 'flex',
+                background: 'linear-gradient(to bottom right, #C896FF, #936EDC)',
+                backgroundClip: 'text',
+                color: 'transparent',
+                paddingBottom: 8,
+              }}
+            >
+              hand.
             </span>
           </div>
           <div
@@ -144,12 +154,6 @@ export default function OgImage() {
               }}
             >
               JAIN 2.0
-            </div>
-            <div style={{ fontSize: 13, color: 'rgba(255,255,255,0.28)', lineHeight: 1.55, display: 'flex' }}>
-              A full visual overhaul — rethinking hierarchy and experience from the ground up.
-            </div>
-            <div style={{ marginTop: 16, display: 'flex', alignItems: 'center', gap: 6 }}>
-              <span style={{ fontSize: 12, color: 'rgba(200,150,255,0.4)', display: 'flex' }}>View case study →</span>
             </div>
           </div>
 

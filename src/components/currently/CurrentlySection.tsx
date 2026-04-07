@@ -67,10 +67,10 @@ export default function CurrentlySection() {
 
       <div className="mb-3">
         <h2 className="mb-3 text-[1.85rem] leading-[1.2] font-bold tracking-[-0.02em] text-white">
-          This is what right now looks like
+          What right now sounds like.
         </h2>
         <p className="max-w-lg text-[0.95rem] leading-[1.75] text-white/60">
-          A Tuesday at 11pm — something good in the headphones, something half-finished in the editor. Both pulled live.
+          Late night. Something good in the headphones, something half-finished in the editor. Both pulled live.
         </p>
       </div>
 
