@@ -3,6 +3,7 @@ import Image from 'next/image';
 import jain from '@/assets/images/jain.webp';
 import Background from '@/components/Background';
 import CurrentlySection from '@/components/currently/CurrentlySection';
+import { AboutMeCard } from '@/components/AboutMeCard';
 
 export default function Home() {
   return (
@@ -83,6 +84,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <AboutMeCard />
 
         <div className="h-px w-full bg-linear-to-r from-transparent via-[#C896FF]/15 to-transparent md:w-3/5 md:min-w-6xl" />
 
