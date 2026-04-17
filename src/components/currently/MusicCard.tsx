@@ -152,7 +152,7 @@ export default function MusicCard({ track, mode }: MusicCardProps) {
       />
 
       <div
-        className="pointer-events-none absolute inset-0 rounded-xl border"
+        className="pointer-events-none absolute inset-0 rounded-xl border border-[#c896ff]/10"
         style={{
           animation: mode === 'both' ? 'np-border-glow 3s ease-in-out infinite' : 'none',
           borderColor: isNowPlaying ? undefined : 'rgba(200,150,255,0.08)',
