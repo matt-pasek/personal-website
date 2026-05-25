@@ -7,7 +7,7 @@ import { AboutMeCard } from '@/components/AboutMeCard';
 
 export default function Home() {
   return (
-    <main className="flex flex-col items-center">
+    <main className="flex flex-col items-center overflow-x-hidden">
       <Background />
 
       <div className="relative z-10 flex min-h-screen w-full flex-col overflow-hidden px-6 pt-20 md:grid md:w-3/5 md:min-w-6xl md:grid-cols-[1fr_500px_1fr] md:items-center md:gap-16 md:overflow-visible md:px-0 md:pt-0">
