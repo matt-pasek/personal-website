@@ -28,10 +28,18 @@ export async function GET(): Promise<NextResponse<NowPlayingResponse>> {
     return noStoreJson(fallbackNowPlaying);
   }
 
-  const recentTracks = await fetch(
-    `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER_NAME}&api_key=${apiKey}&format=json&limit=1`,
-    { cache: 'no-store' },
-  );
+  const todayMidnightUnix = Math.floor(new Date(new Date().toISOString().split('T')[0]).getTime() / 1000);
+
+  const [recentTracks, todayTracks] = await Promise.all([
+    fetch(
+      `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER_NAME}&api_key=${apiKey}&format=json&limit=1`,
+      { cache: 'no-store' },
+    ),
+    fetch(
+      `https://ws.audioscrobbler.com/2.0/?method=user.getrecenttracks&user=${LASTFM_USER_NAME}&api_key=${apiKey}&format=json&limit=1&from=${todayMidnightUnix}`,
+      { cache: 'no-store' },
+    ),
+  ]);
 
   if (!recentTracks.ok) {
     return noStoreJson(fallbackNowPlaying);
@@ -42,6 +50,16 @@ export async function GET(): Promise<NextResponse<NowPlayingResponse>> {
 
   if (!track) {
     return noStoreJson(fallbackNowPlaying);
+  }
+
+  let listeningTimeText: string | undefined;
+  if (todayTracks.ok) {
+    const todayData: RecentTracksResponseModel = await todayTracks.json();
+    const count = parseInt(todayData.recenttracks['@attr'].total, 10) || 0;
+    const totalMins = Math.round(count * 3.5);
+    const hrs = Math.floor(totalMins / 60);
+    const mins = totalMins % 60;
+    listeningTimeText = hrs > 0 ? `${hrs} hrs ${mins} mins` : `${mins} mins`;
   }
 
   const imageUrls = track.image.map((img) => img['#text']).filter(Boolean);
@@ -56,5 +74,6 @@ export async function GET(): Promise<NextResponse<NowPlayingResponse>> {
     scrobbledSongs: recenttracks['@attr'].total,
     playedDate: track.date?.['#text'],
     songUrl: track.url,
+    listeningTimeText,
   });
 }
