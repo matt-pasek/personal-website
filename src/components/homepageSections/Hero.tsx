@@ -6,7 +6,7 @@ import ChromaWaves from '@/components/animated/ChromaWaves';
 
 export function Hero() {
   return (
-    <section id="home" className="relative flex min-h-screen flex-col overflow-hidden">
+    <section id="home" className="relative flex min-h-dvh flex-col overflow-hidden">
       <div className="absolute inset-0 z-0 overflow-hidden bg-[#060411]">
         <ChromaWaves
           className="absolute inset-0"
