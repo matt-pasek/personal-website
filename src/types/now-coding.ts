@@ -4,4 +4,10 @@ export interface NowCodingResponse {
   topEditor: string | null;
   totalText: string;
   totalSeconds: number;
+  dailyTotals: NowCodingDailyTotal[];
+}
+
+export interface NowCodingDailyTotal {
+  date: string;
+  totalSeconds: number;
 }

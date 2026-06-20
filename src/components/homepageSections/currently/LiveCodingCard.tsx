@@ -10,6 +10,10 @@ interface LiveCodingCardProps {
 }
 
 export function LiveCodingCard({ data, active }: LiveCodingCardProps) {
+  const dailyTotals = data?.dailyTotals ?? [];
+  const maxDailyTotal = Math.max(0, ...dailyTotals.map((day) => day.totalSeconds));
+  const stackItems = [data?.topLanguage, data?.topEditor].filter(Boolean);
+
   return (
     <Reveal className="flex min-w-[300px] flex-1 basis-[360px]" delay={0.08}>
       <motion.div
@@ -30,21 +34,36 @@ export function LiveCodingCard({ data, active }: LiveCodingCardProps) {
           </div>
           <div>
             <span className="text-portfolio-green">const</span> stack <span className="text-portfolio-purple">=</span> [
-            <span className="text-portfolio-ink">&quot;{data?.topLanguage ?? 'TS'}&quot;</span>,{' '}
-            <span className="text-portfolio-ink">&quot;React&quot;</span>];
+            {stackItems.length > 0 ? (
+              stackItems.map((item, index) => (
+                <span key={item}>
+                  <span className="text-portfolio-ink">&quot;{item}&quot;</span>
+                  {index < stackItems.length - 1 ? ', ' : null}
+                </span>
+              ))
+            ) : (
+              <span className="text-portfolio-ink">&quot;-&quot;</span>
+            )}
+            ];
           </div>
         </div>
         <div className="mb-3.5 flex h-[46px] items-end gap-1">
-          {[40, 62, 30, 80, 100, 54, 46].map((height, index) => (
-            <motion.span
-              key={index}
-              initial={{ height: '12%' }}
-              whileInView={{ height: `${height}%` }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.04 }}
-              className={`flex-1 rounded-t-[3px] ${index === 4 ? 'bg-portfolio-green' : 'bg-portfolio-green/40'}`}
-            />
-          ))}
+          {dailyTotals.map((day, index) => {
+            const height = maxDailyTotal > 0 ? (day.totalSeconds / maxDailyTotal) * 100 : 0;
+            const isToday = index === dailyTotals.length - 1;
+
+            return (
+              <motion.span
+                key={day.date}
+                initial={{ height: 0 }}
+                whileInView={{ height: `${height}%` }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.04 }}
+                className={`flex-1 rounded-t-[3px] ${isToday ? 'bg-portfolio-green' : 'bg-portfolio-green/40'}`}
+                title={`${day.date}: ${Math.round(day.totalSeconds / 60)} mins`}
+              />
+            );
+          })}
         </div>
         <div className="flex items-baseline gap-2.5">
           <span className="font-mono text-[28px] font-medium text-portfolio-ink tabular-nums">
