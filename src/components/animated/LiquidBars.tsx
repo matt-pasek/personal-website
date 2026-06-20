@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { cn } from '@/lib/utils';
@@ -11,8 +11,9 @@ export interface LiquidBarsProps {
   height?: number | string;
   speed?: number;
   color?: string;
+  color2?: string;
+  morphSpeed?: number;
   barCount?: number;
-
   scale?: number;
   waveComplexity?: number;
   waveAmplitude?: number;
@@ -20,7 +21,6 @@ export interface LiquidBarsProps {
   streakIntensity?: number;
   metallicContrast?: number;
   highlightWarmth?: number;
-
   refractionStrength?: number;
   edgeWidth?: number;
   edgeSoftness?: number;
@@ -29,7 +29,6 @@ export interface LiquidBarsProps {
   gapDarkness?: number;
   refractionWaveSpeed?: number;
   refractionWaveFrequency?: number;
-
   opacity?: number;
   className?: string;
   children?: ReactNode;
@@ -41,6 +40,8 @@ const combinedFragmentShader = `
   uniform float uTime;
   uniform vec2 uResolution;
   uniform vec3 uColor;
+  uniform vec3 uColor2;
+  uniform float uMorphSpeed;
   uniform float uOpacity;
   uniform float uBarCount;
   uniform float uScale;
@@ -131,11 +132,9 @@ const combinedFragmentShader = `
   vec3 getMetallicColor(vec2 uv, vec2 resolution, vec3 color, float time) {
     vec2 p = uv * 2.0 - 1.0;
     p.x *= resolution.x / resolution.y;
-
     p *= uScale;
 
     float t = time * 0.3;
-
     float waves = snoise(vec3(p * 1.5, t * 0.5)) * 0.5 * uWaveAmplitude;
 
     if (uWaveComplexity >= 2.0) {
@@ -171,7 +170,7 @@ const combinedFragmentShader = `
     finalColor = mix(finalColor, highlightColor, streak1 * 0.6);
     finalColor += highlightColor * streak2 * 0.3;
 
-    finalColor += vec3(0.08, 0.06, 0.03) * pow(reflection, 3.0) * uHighlightWarmth;
+    finalColor += color * 0.12 * pow(reflection, 3.0) * uHighlightWarmth;
 
     return finalColor;
   }
@@ -182,6 +181,9 @@ const combinedFragmentShader = `
     float barWidth = 1.0 / uBarCount;
     float barIndex = floor(uv.x / barWidth);
     float barLocal = mod(uv.x, barWidth) / barWidth;
+
+    float morphT = smoothstep(0.0, 1.0, sin(uTime * uMorphSpeed + barIndex * 0.6) * 0.5 + 0.5);
+    vec3 activeColor = mix(uColor, uColor2, morphT);
 
     float edgeWidth = uEdgeWidth;
 
@@ -206,7 +208,7 @@ const combinedFragmentShader = `
     }
 
     vec2 refractedUV = clamp(uv + refractionOffset, 0.0, 1.0);
-    vec3 metallic = getMetallicColor(refractedUV, uResolution, uColor, uTime);
+    vec3 metallic = getMetallicColor(refractedUV, uResolution, activeColor, uTime);
 
     float barMask = smoothstep(0.0, uEdgeSoftness, barLocal) * smoothstep(1.0, 1.0 - uEdgeSoftness, barLocal);
 
@@ -218,7 +220,7 @@ const combinedFragmentShader = `
 
     vec3 finalColor = metallic * gapDarken;
     finalColor += vec3(1.0) * edgeHighlightVal;
-    finalColor += uColor * fresnel * 0.3;
+    finalColor += activeColor * fresnel * 0.3;
 
     gl_FragColor = vec4(finalColor, uOpacity * barMask);
   }
@@ -234,6 +236,8 @@ const vertexShader = `
 
 interface SceneProps {
   color: THREE.Color;
+  color2: THREE.Color;
+  morphSpeed: number;
   opacity: number;
   speed: number;
   barCount: number;
@@ -256,6 +260,8 @@ interface SceneProps {
 
 function Scene({
   color,
+  color2,
+  morphSpeed,
   opacity,
   speed,
   barCount,
@@ -281,26 +287,29 @@ function Scene({
   const uniforms = useMemo(
     () => ({
       uTime: { value: 0 },
-      uResolution: { value: new THREE.Vector2(100, 100) },
-      uColor: { value: new THREE.Color() },
-      uOpacity: { value: 1 },
-      uBarCount: { value: 12 },
-      uScale: { value: 1 },
-      uWaveComplexity: { value: 3 },
-      uWaveAmplitude: { value: 1 },
-      uReflectionFrequency: { value: 8 },
-      uStreakIntensity: { value: 1 },
-      uMetallicContrast: { value: 1 },
-      uHighlightWarmth: { value: 1 },
-      uRefractionStrength: { value: 1 },
-      uEdgeWidth: { value: 0.12 },
-      uEdgeSoftness: { value: 0.03 },
-      uFresnelIntensity: { value: 0.2 },
-      uEdgeHighlight: { value: 0.12 },
-      uGapDarkness: { value: 0.6 },
-      uRefractionWaveSpeed: { value: 2 },
-      uRefractionWaveFrequency: { value: 12.566 },
+      uResolution: { value: new THREE.Vector2(size.width, size.height) },
+      uColor: { value: color.clone() },
+      uColor2: { value: color2.clone() },
+      uMorphSpeed: { value: morphSpeed },
+      uOpacity: { value: opacity },
+      uBarCount: { value: barCount },
+      uScale: { value: scale },
+      uWaveComplexity: { value: waveComplexity },
+      uWaveAmplitude: { value: waveAmplitude },
+      uReflectionFrequency: { value: reflectionFrequency },
+      uStreakIntensity: { value: streakIntensity },
+      uMetallicContrast: { value: metallicContrast },
+      uHighlightWarmth: { value: highlightWarmth },
+      uRefractionStrength: { value: refractionStrength },
+      uEdgeWidth: { value: edgeWidth },
+      uEdgeSoftness: { value: edgeSoftness },
+      uFresnelIntensity: { value: fresnelIntensity },
+      uEdgeHighlight: { value: edgeHighlight },
+      uGapDarkness: { value: gapDarkness },
+      uRefractionWaveSpeed: { value: refractionWaveSpeed },
+      uRefractionWaveFrequency: { value: refractionWaveFrequency },
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   );
 
@@ -309,6 +318,8 @@ function Scene({
       const material = meshRef.current.material as THREE.ShaderMaterial;
       material.uniforms.uTime.value = state.clock.elapsedTime * speed;
       material.uniforms.uColor.value = color;
+      material.uniforms.uColor2.value = color2;
+      material.uniforms.uMorphSpeed.value = morphSpeed;
       material.uniforms.uOpacity.value = opacity;
       material.uniforms.uBarCount.value = barCount;
       material.uniforms.uScale.value = scale;
@@ -348,6 +359,8 @@ export default function LiquidBars({
   height = '100%',
   speed = 1,
   color = '#a855f7',
+  color2 = '',
+  morphSpeed = 0.2,
   barCount = 6,
   scale = 0.4,
   waveComplexity = 1,
@@ -369,35 +382,40 @@ export default function LiquidBars({
   children,
 }: LiquidBarsProps) {
   const threeColor = useMemo(() => new THREE.Color(color), [color]);
+  const threeColor2 = useMemo(() => new THREE.Color(color2 || color), [color2, color]);
+
+  const [isVisible, setIsVisible] = useState(false);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!wrapperRef.current) return;
+    const observer = new IntersectionObserver(([entry]) => setIsVisible(entry.isIntersecting), { threshold: 0.01 });
+    observer.observe(wrapperRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const widthStyle = typeof width === 'number' ? `${width}px` : width;
   const heightStyle = typeof height === 'number' ? `${height}px` : height;
 
   return (
     <div
+      ref={wrapperRef}
       className={cn('relative overflow-hidden', className)}
-      style={{
-        width: widthStyle,
-        height: heightStyle,
-      }}
+      style={{ width: widthStyle, height: heightStyle }}
     >
       <Canvas
         className="absolute inset-0"
         orthographic
-        camera={{
-          left: -1,
-          right: 1,
-          top: 1,
-          bottom: -1,
-          near: 0,
-          far: 10,
-          position: [0, 0, 5],
-        }}
+        camera={{ left: -1, right: 1, top: 1, bottom: -1, near: 0, far: 10, position: [0, 0, 5] }}
         gl={{ antialias: true, alpha: true }}
+        dpr={[1, 1.5]}
+        frameloop={isVisible ? 'always' : 'never'}
         style={{ width: '100%', height: '100%' }}
       >
         <Scene
           color={threeColor}
+          color2={threeColor2}
+          morphSpeed={morphSpeed}
           opacity={opacity}
           speed={speed}
           barCount={barCount}
