@@ -25,7 +25,7 @@ export function Hero() {
       </div>
 
       <motion.div
-        className="relative z-10 mx-auto flex w-full max-w-[1180px] flex-1 flex-col justify-center gap-[clamp(18px,3vw,40px)] px-6 pt-[120px] pb-[120px] sm:px-10 sm:pt-[132px]"
+        className="relative z-10 mx-auto flex w-full max-w-[1180px] flex-1 flex-col justify-between gap-8 px-6 pt-28 pb-24 sm:justify-center sm:gap-[clamp(18px,3vw,40px)] sm:px-10 sm:pt-[132px] sm:pb-[120px]"
         initial="hidden"
         animate="visible"
         variants={{ visible: { transition: { staggerChildren: 0.09, delayChildren: 0.08 } } }}
@@ -33,21 +33,21 @@ export function Hero() {
         <motion.div
           variants={fadeUp}
           transition={softSpring}
-          className="flex flex-wrap items-end justify-between gap-4 font-mono text-xs tracking-[0.18em] text-portfolio-muted uppercase"
+          className="flex flex-wrap items-center justify-between gap-2 font-mono text-xs tracking-[0.18em] text-portfolio-ink/55 uppercase"
         >
           <span>
             <span className="text-portfolio-purple">portfolio</span> / 2026
           </span>
           <span>
-            (<span className="text-portfolio-purple">01</span> designer) (
-            <span className="text-portfolio-green">02</span> developer)
+            (<span className="text-portfolio-purple">designer</span>) (
+            <span className="text-portfolio-green">developer</span>)
           </span>
         </motion.div>
 
         <motion.h1
           variants={fadeUp}
           transition={softSpring}
-          className="max-w-full text-[clamp(64px,18vw,250px)] leading-[0.6] font-extrabold tracking-[-0.04em] text-balance text-portfolio-ink"
+          className="max-w-full text-[clamp(84px,18vw,250px)] leading-[0.6] font-extrabold tracking-[-0.04em] text-balance text-portfolio-ink"
         >
           matt
           <br />
@@ -57,7 +57,7 @@ export function Hero() {
         <motion.div
           variants={fadeUp}
           transition={softSpring}
-          className="mt-10 flex flex-wrap items-end justify-between gap-[30px]"
+          className="flex flex-col gap-6 sm:mt-10 sm:flex-row sm:items-end sm:justify-between sm:gap-[30px]"
         >
           <p className="m-0 max-w-[440px] text-[15.5px] leading-[1.7] text-pretty text-portfolio-muted">
             Creative developer with an enterprise background. Currently studying in Finland and building things I
@@ -68,8 +68,8 @@ export function Hero() {
               Designer <span className="text-portfolio-purple">by eye</span>, dev{' '}
               <span className="text-portfolio-green">by hand</span>.
             </div>
-            <div className="mt-2 font-mono text-[11px] tracking-[0.14em] text-portfolio-faint uppercase">
-              ↳ lahti · open selectively
+            <div className="mt-2 font-mono text-[11px] tracking-[0.14em] text-portfolio-muted uppercase">
+              available for projects · finland
             </div>
           </div>
         </motion.div>
