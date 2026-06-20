@@ -5,7 +5,18 @@ import { SectionLabel } from '@/components/homepageSections/SectionLabel';
 import { motion } from 'framer-motion';
 
 const designStack = ['Figma', 'Design systems', 'Motion'];
-const buildStack = ['TypeScript', 'React', 'Next.js', 'Tailwind', 'Framer Motion', 'Three.js', 'Node', 'Git'];
+const buildStack = [
+  'TypeScript',
+  'React',
+  'Vue.js',
+  'Astro',
+  'Next.js',
+  'Tailwind',
+  'Framer Motion',
+  'Three.js',
+  'Node',
+  'Git',
+];
 
 function StackGroup({
   title,

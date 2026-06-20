@@ -69,7 +69,7 @@ export function Hero() {
               <span className="text-portfolio-green">by hand</span>.
             </div>
             <div className="mt-2 font-mono text-[11px] tracking-[0.14em] text-portfolio-faint uppercase">
-              lahti · open selectively
+              ↳ lahti · open selectively
             </div>
           </div>
         </motion.div>
