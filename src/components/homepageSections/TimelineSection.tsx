@@ -9,19 +9,19 @@ const timeline = [
     accent: 'purple',
     label: '2020',
     title: 'First real lines of code.',
-    body: 'Before finishing high school. No plan, just a stubborn need to make the thing work — then make it good.',
+    body: 'Started at a programming-focused high school. Built small things, broke most of them, and kept going until frontend and design started feeling less like school, and more like the thing.',
   },
   {
     accent: 'green',
     label: 'enterprise · ongoing',
-    title: 'Shipped to production. Kept going.',
-    body: 'Led the full frontend development of an AI HR platform for the biggest Polish employer. Then stayed. Now developing production-grade solutions for multiple enterprise clients. Real codebases, real stakes.',
+    title: 'Got into the industry early. Stayed there.',
+    body: 'Joined the industry before finishing high school. While preparing for final exams, I was already shipping enterprise-ready code for biggest retailer in Poland. Still doing that now. Real codebases, real clients, and real stakes.',
   },
   {
     accent: 'purple',
     label: 'now · lahti',
-    title: 'Studying, and building on my own terms.',
-    body: 'Moved to Finland to study. Picking projects for the craft, not the brief.',
+    title: 'Studying, working, building what matters.',
+    body: 'Moved to Finland to study. Now based in Lahti, balancing university, client work, and personal projects I care about. Built for the craft, not just the brief.',
   },
 ];
 
