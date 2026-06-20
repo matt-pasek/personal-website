@@ -55,7 +55,7 @@ export function CaseStudyModal({ study }: Props) {
       />
 
       <motion.div
-        className="fixed inset-x-0 top-24 bottom-0 z-45 mx-auto max-w-7xl overflow-y-auto rounded-2xl bg-portfolio-bg shadow-[0_-8px_48px_rgba(0,0,0,0.5)]"
+        className="fixed inset-x-0 top-0 bottom-0 z-45 mx-auto max-w-7xl overflow-y-auto rounded-2xl bg-portfolio-bg shadow-[0_-8px_48px_rgba(0,0,0,0.5)]"
         animate={{ y: open ? 0 : '100%' }}
         initial={{ y: '100%' }}
         transition={{ type: 'spring', stiffness: 320, damping: 38, mass: 0.9 }}
