@@ -4,7 +4,7 @@ import { SectionLabel } from '@/components/homepageSections/SectionLabel';
 export function NowSection() {
   const items = [
     ['where', 'Lahti, Finland. Studying, freezing, shipping.', 'purple'],
-    ['building', "This site, and a couple of things I'm not ready to show.", 'green'],
+    ['building', 'Enterprise client work, plus a few things not ready to show.', 'green'],
     ['learning', 'Shaders, type, and how to say no to good-enough.', 'purple'],
     ['this site', 'Next.js, TypeScript, hand-rolled. Type set in Fira.', 'green'],
   ];
