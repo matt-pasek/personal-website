@@ -1,26 +1,34 @@
 import { Reveal } from '@/components/animated/Reveal';
 
-export function StatTile({
-  label,
-  value,
-  note,
-  featured,
-  tone,
-}: {
+interface StatTitleProps {
   label: string;
   value: string;
+  valueLabel?: string;
   note?: string;
   featured?: boolean;
   tone?: 'purple' | 'green';
-}) {
+  className?: string;
+  valueClassName?: string;
+}
+
+export function StatTile({
+  label,
+  value,
+  valueLabel,
+  note,
+  featured,
+  tone,
+  className,
+  valueClassName,
+}: StatTitleProps) {
   const accent =
     tone === 'green' ? 'text-portfolio-green' : tone === 'purple' ? 'text-portfolio-purple' : 'text-portfolio-ink';
   return (
     <Reveal
       className={
         featured
-          ? 'min-h-[200px] min-w-[300px] flex-1 basis-[300px]'
-          : 'min-h-[150px] min-w-[220px] flex-1 basis-[220px]'
+          ? `min-h-[200px] min-w-[300px] flex-1 basis-[300px] ${className ?? ''}`
+          : `min-h-[150px] min-w-[220px] flex-1 basis-[220px] ${className ?? ''}`
       }
     >
       <div
@@ -37,9 +45,10 @@ export function StatTile({
           <div
             className={`font-mono font-medium tracking-[-0.03em] tabular-nums ${accent} ${
               featured ? 'text-[clamp(46px,7vw,76px)] leading-[0.95]' : 'text-[clamp(30px,4.4vw,52px)]'
-            }`}
+            } ${valueClassName ?? ''}`}
           >
             {value}
+            {valueLabel && <span className="text-xl text-portfolio-ink"> {valueLabel}</span>}
           </div>
           {note ? <div className="mt-1 font-mono text-xs text-portfolio-faint">{note}</div> : null}
         </div>

@@ -1,12 +1,19 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GithubStatsResponse } from '@/types/github-stats';
 import { StatTile } from './StatTitle';
-import { buildHeatmap } from './util/buildHeatmap.util';
 import { SectionLabel } from '@/components/homepageSections/SectionLabel';
 import { Reveal } from '@/components/animated/Reveal';
 import { LanguageTile } from './LanguageTile';
+
+const heatmapColors = [
+  'bg-portfolio-faint/15',
+  'bg-portfolio-green/30',
+  'bg-portfolio-green/50',
+  'bg-portfolio-green/75',
+  'bg-portfolio-green',
+] as const;
 
 const fallbackStats: GithubStatsResponse = {
   memberSince: '———',
@@ -15,6 +22,7 @@ const fallbackStats: GithubStatsResponse = {
   thisYear: '———',
   topLanguage: 'TypeScript',
   longestStreak: '———',
+  heatmap: Array.from({ length: 52 * 7 }, () => 0),
   mostActive: 'Tuesdays, late.',
   abandonedRepos: '9',
 };
@@ -41,7 +49,7 @@ export function GitHubSection() {
     };
   }, []);
 
-  const heatmapCells = useMemo(() => buildHeatmap(), []);
+  const heatmapCells = stats.heatmap.length > 0 ? stats.heatmap : fallbackStats.heatmap;
 
   return (
     <section className="mx-auto max-w-[1180px] px-6 pb-[clamp(72px,11vw,130px)] sm:px-10">
@@ -60,18 +68,12 @@ export function GitHubSection() {
             </div>
             <div className="grid w-full grid-flow-col grid-rows-7 gap-[3px] overflow-hidden">
               {heatmapCells.map((level, index) => (
-                <span key={index} className={`aspect-square rounded-xs ${level}`} />
+                <span key={index} className={`aspect-square rounded-xs ${heatmapColors[level]}`} />
               ))}
             </div>
             <div className="mt-3.5 flex items-center gap-2 font-mono text-[11px] text-portfolio-muted">
               <span>less</span>
-              {[
-                'bg-portfolio-faint/15',
-                'bg-portfolio-green/30',
-                'bg-portfolio-green/50',
-                'bg-portfolio-green/75',
-                'bg-portfolio-green',
-              ].map((color) => (
+              {heatmapColors.map((color) => (
                 <span key={color} className={`size-[11px] rounded-xs ${color}`} />
               ))}
               <span>more</span>
@@ -88,7 +90,13 @@ export function GitHubSection() {
         />
         <LanguageTile language={stats.topLanguage} />
         <StatTile label="public repos" value={stats.publicRepos} />
-        <StatTile label="longest streak" value={stats.longestStreak} note="before life happened" tone="green" />
+        <StatTile
+          label="longest streak"
+          value={stats.longestStreak}
+          valueLabel="days"
+          note="before life happened"
+          tone="green"
+        />
         <StatTile label="most active" value={stats.mostActive} />
         <StatTile label="abandoned repos" value={stats.abandonedRepos} note="we don't talk about those" tone="purple" />
       </div>

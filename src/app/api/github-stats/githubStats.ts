@@ -21,6 +21,7 @@ export type ContributionDay = {
 
 export type YearlyContributions = {
   year: number;
+  totalCommitContributions?: number | null;
   totalContributions?: number | null;
   days?: ContributionDay[] | null;
 };
@@ -74,7 +75,7 @@ function resolveLongestStreak(years: YearlyContributions[]) {
     }
   }
 
-  return longest > 0 ? `${longest.toLocaleString('en-US')} days` : GITHUB_STATS_FALLBACK;
+  return longest > 0 ? longest.toLocaleString('en-US') : GITHUB_STATS_FALLBACK;
 }
 
 function resolveHeatmap(days: ContributionDay[]): GithubHeatmapLevel[] {
@@ -87,6 +88,11 @@ function resolveHeatmap(days: ContributionDay[]): GithubHeatmapLevel[] {
     if (count <= 9) return 3;
     return 4;
   });
+}
+
+function resolveTotalCommits(years: YearlyContributions[]) {
+  const total = years.reduce((sum, year) => sum + (year.totalCommitContributions ?? 0), 0);
+  return resolveNumber(total);
 }
 
 export function resolveGithubStats({
@@ -105,7 +111,7 @@ export function resolveGithubStats({
   return {
     memberSince: resolveYear(user?.created_at),
     publicRepos: resolveNumber(user?.public_repos),
-    totalCommits: resolveNumber(recentContributions?.totalCommitContributions),
+    totalCommits: resolveTotalCommits(safeYearlyContributions),
     thisYear: resolveNumber(thisYearContributions),
     topLanguage: resolveTopLanguage(safeRepos),
     longestStreak: resolveLongestStreak(safeYearlyContributions),

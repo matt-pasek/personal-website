@@ -1,5 +1,11 @@
 import { NextResponse } from 'next/server';
-import type { ContributionDay, GithubRepo, GithubUser, YearlyContributions } from '@/app/api/github-stats/githubStats';
+import type {
+  ContributionDay,
+  GithubRepo,
+  GithubUser,
+  RecentContributions,
+  YearlyContributions,
+} from '@/app/api/github-stats/githubStats';
 import { resolveGithubStats } from '@/app/api/github-stats/githubStats';
 import type { GithubStatsResponse } from '@/types/github-stats';
 
@@ -74,6 +80,7 @@ async function fetchYearlyContributions(token: string, year: number): Promise<Ye
         query YearlyContributions($login: String!, $from: DateTime!, $to: DateTime!) {
           user(login: $login) {
             contributionsCollection(from: $from, to: $to) {
+              totalCommitContributions
               contributionCalendar {
                 totalContributions
                 weeks {
@@ -100,6 +107,7 @@ async function fetchYearlyContributions(token: string, year: number): Promise<Ye
     data?: {
       user?: {
         contributionsCollection?: {
+          totalCommitContributions?: number;
           contributionCalendar?: {
             totalContributions?: number;
             weeks?: { contributionDays?: ContributionDay[] }[];
@@ -112,7 +120,68 @@ async function fetchYearlyContributions(token: string, year: number): Promise<Ye
 
   return {
     year,
+    totalCommitContributions: collection?.totalCommitContributions ?? null,
     totalContributions: collection?.contributionCalendar?.totalContributions ?? null,
+    days: collection?.contributionCalendar?.weeks?.flatMap((week) => week.contributionDays ?? []) ?? [],
+  };
+}
+
+async function fetchRecentContributions(token?: string): Promise<RecentContributions | null> {
+  if (!token) return null;
+
+  const toDate = new Date();
+  const fromDate = new Date(toDate);
+  fromDate.setUTCFullYear(fromDate.getUTCFullYear() - 1);
+
+  const res = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      query: `
+        query RecentContributions($login: String!, $from: DateTime!, $to: DateTime!) {
+          user(login: $login) {
+            contributionsCollection(from: $from, to: $to) {
+              totalCommitContributions
+              contributionCalendar {
+                weeks {
+                  contributionDays {
+                    date
+                    contributionCount
+                  }
+                }
+              }
+            }
+          }
+        }
+      `,
+      variables: { login: GITHUB_USERNAME, from: fromDate.toISOString(), to: toDate.toISOString() },
+    }),
+    next: { revalidate },
+  });
+
+  if (!res.ok) {
+    throw new Error(`GitHub GraphQL API error: ${res.status}`);
+  }
+
+  const raw = (await res.json()) as {
+    data?: {
+      user?: {
+        contributionsCollection?: {
+          totalCommitContributions?: number;
+          contributionCalendar?: {
+            weeks?: { contributionDays?: ContributionDay[] }[];
+          };
+        };
+      };
+    };
+  };
+  const collection = raw.data?.user?.contributionsCollection;
+
+  return {
+    totalCommitContributions: collection?.totalCommitContributions ?? null,
     days: collection?.contributionCalendar?.weeks?.flatMap((week) => week.contributionDays ?? []) ?? [],
   };
 }
@@ -128,16 +197,17 @@ export async function GET(): Promise<NextResponse<GithubStatsResponse>> {
   const token = process.env.GITHUB_TOKEN;
 
   try {
-    const [user, repos, yearlyContributions] = await Promise.all([
+    const [user, repos, yearlyContributions, recentContributions] = await Promise.all([
       fetchGithubJson<GithubUser>(`https://api.github.com/users/${GITHUB_USERNAME}`, token),
       fetchGithubJson<GithubRepo[]>(
         `https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100&sort=updated`,
         token,
       ),
       fetchAllYearlyContributions(token),
+      fetchRecentContributions(token),
     ]);
 
-    return NextResponse.json(resolveGithubStats({ user, repos, yearlyContributions }));
+    return NextResponse.json(resolveGithubStats({ user, repos, yearlyContributions, recentContributions }));
   } catch (error) {
     console.error(error);
     return NextResponse.json(resolveGithubStats({}));
