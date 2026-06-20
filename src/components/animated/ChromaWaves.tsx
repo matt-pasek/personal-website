@@ -45,6 +45,19 @@ export default function ChromaWaves({
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
   const startTimeRef = useRef<number>(0);
+  const isPausedRef = useRef(false);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isPausedRef.current = !entry.isIntersecting;
+      },
+      { threshold: 0.01 },
+    );
+    observer.observe(containerRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const hexToRgb = useCallback((hex: string) => {
     const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -82,7 +95,7 @@ export default function ChromaWaves({
     else if (quality === 'medium') qualityMultiplier = 0.75;
     else if (quality === 'high') qualityMultiplier = 1.0;
 
-    const pixelRatio = Math.min(window.devicePixelRatio * qualityMultiplier, 2);
+    const pixelRatio = Math.min(window.devicePixelRatio * qualityMultiplier, 1.5);
     renderer.setSize(actualWidth, actualHeight, false);
     renderer.setPixelRatio(pixelRatio);
 
@@ -291,6 +304,7 @@ export default function ChromaWaves({
     const animate = (currentTime: number) => {
       rafRef.current = requestAnimationFrame(animate);
 
+      if (isPausedRef.current) return;
       if (currentTime - lastTime < 16) return;
       lastTime = currentTime;
 
