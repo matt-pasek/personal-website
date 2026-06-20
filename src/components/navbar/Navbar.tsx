@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { BriefcaseIcon } from '@/components/navbar/icons/BriefcaseIcon';
 import { AsteriskIcon } from '@/components/navbar/icons/AsteriskIcon';
 import { PulseIcon } from '@/components/navbar/icons/PulseIcon';
@@ -14,6 +14,36 @@ const navItems = [
   { label: 'Currently', href: '#currently', icon: PulseIcon },
   { label: 'Contact', href: '#contact', icon: MailIcon },
 ];
+
+const mobileLabelExitMs = 130;
+const mobilePillTravelMs = 260;
+
+const mobileLabelVariants = {
+  hidden: { opacity: 0, maxWidth: 0 },
+  visible: {
+    opacity: 1,
+    maxWidth: 150,
+    transition: {
+      opacity: { duration: 0.14 },
+      maxWidth: { duration: 0.22, ease: [0.25, 0, 0, 1] as const },
+    },
+  },
+  exit: {
+    opacity: 0,
+    maxWidth: 0,
+    transition: {
+      opacity: { duration: 0.08 },
+      maxWidth: { duration: 0.13, ease: [0.4, 0, 1, 1] as const },
+    },
+  },
+};
+
+type PillBounds = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
 
 export function Navbar() {
   const { scrollY } = useScroll();
@@ -33,10 +63,122 @@ export function Navbar() {
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('#home');
+  const [activePillHref, setActivePillHref] = useState('#home');
+  const [visibleLabelHref, setVisibleLabelHref] = useState('#home');
+  const [labelIsVisible, setLabelIsVisible] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const mobileAnimationTarget = useRef('#home');
+  const mobileAnimationTimers = useRef<number[]>([]);
+  const tabRowRef = useRef<HTMLDivElement | null>(null);
+  const itemRefs = useRef<Record<string, HTMLAnchorElement | null>>({});
+  const activeVisualHref = isMobile ? activePillHref : activeSection;
+  const [pillBounds, setPillBounds] = useState<PillBounds | null>(null);
+
+  const measureActivePill = useCallback(() => {
+    const tabRow = tabRowRef.current;
+    const item = itemRefs.current[activeVisualHref];
+
+    if (!tabRow || !item) return;
+
+    const tabRowRect = tabRow.getBoundingClientRect();
+    const itemRect = item.getBoundingClientRect();
+    const nextBounds = {
+      x: itemRect.left - tabRowRect.left,
+      y: itemRect.top - tabRowRect.top,
+      width: itemRect.width,
+      height: itemRect.height,
+    };
+
+    setPillBounds((currentBounds) => {
+      if (
+        currentBounds &&
+        Math.abs(currentBounds.x - nextBounds.x) < 0.5 &&
+        Math.abs(currentBounds.y - nextBounds.y) < 0.5 &&
+        Math.abs(currentBounds.width - nextBounds.width) < 0.5 &&
+        Math.abs(currentBounds.height - nextBounds.height) < 0.5
+      ) {
+        return currentBounds;
+      }
+
+      return nextBounds;
+    });
+  }, [activeVisualHref]);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 640);
+    check();
+    window.addEventListener('resize', check);
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
     setIsScrolled(latest > 96);
   });
+
+  useEffect(() => {
+    const tabRow = tabRowRef.current;
+    const item = itemRefs.current[activeVisualHref];
+
+    if (!tabRow || !item) return;
+
+    const frame = window.requestAnimationFrame(measureActivePill);
+    const observer = new ResizeObserver(measureActivePill);
+
+    observer.observe(tabRow);
+    observer.observe(item);
+    window.addEventListener('resize', measureActivePill);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      observer.disconnect();
+      window.removeEventListener('resize', measureActivePill);
+    };
+  }, [activeVisualHref, measureActivePill]);
+
+  useEffect(() => {
+    const clearMobileAnimationTimers = () => {
+      mobileAnimationTimers.current.forEach((timer) => window.clearTimeout(timer));
+      mobileAnimationTimers.current = [];
+    };
+
+    clearMobileAnimationTimers();
+
+    if (!isMobile) {
+      mobileAnimationTarget.current = activeSection;
+      return clearMobileAnimationTimers;
+    }
+
+    if (mobileAnimationTarget.current === activeSection) {
+      const syncMobileStateTimer = window.setTimeout(() => {
+        setActivePillHref(activeSection);
+        setVisibleLabelHref(activeSection);
+        setLabelIsVisible(true);
+      }, 0);
+
+      mobileAnimationTimers.current.push(syncMobileStateTimer);
+      return clearMobileAnimationTimers;
+    }
+
+    mobileAnimationTarget.current = activeSection;
+
+    const hideLabelTimer = window.setTimeout(() => {
+      setLabelIsVisible(false);
+    }, 0);
+    const movePillTimer = window.setTimeout(() => {
+      setActivePillHref(activeSection);
+      setVisibleLabelHref(activeSection);
+
+      const showLabelTimer = window.setTimeout(() => {
+        setLabelIsVisible(true);
+      }, mobilePillTravelMs);
+
+      mobileAnimationTimers.current.push(showLabelTimer);
+    }, mobileLabelExitMs);
+
+    mobileAnimationTimers.current.push(hideLabelTimer, movePillTimer);
+
+    return clearMobileAnimationTimers;
+  }, [activeSection, isMobile]);
 
   useEffect(() => {
     const ids = ['home', 'work', 'currently', 'contact'];
@@ -80,29 +222,51 @@ export function Navbar() {
           aria-hidden="true"
         />
 
-        <div className="flex items-center gap-1">
+        <div ref={tabRowRef} className="relative flex items-center gap-1">
+          {pillBounds && (
+            <motion.span
+              className="pointer-events-none absolute rounded-full bg-portfolio-ink/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+              initial={false}
+              animate={{
+                x: pillBounds.x,
+                y: pillBounds.y,
+                width: pillBounds.width,
+                height: pillBounds.height,
+              }}
+              transition={{ type: 'spring', stiffness: 420, damping: 42, mass: 0.8 }}
+              aria-hidden="true"
+            />
+          )}
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = activeSection === item.href;
+            const hasPill = (isMobile ? activePillHref : activeSection) === item.href;
+            const shouldShowLabel = !isMobile || (visibleLabelHref === item.href && labelIsVisible);
             return (
               <a
+                ref={(node) => {
+                  itemRefs.current[item.href] = node;
+                }}
                 key={item.href}
                 href={item.href}
                 className={`group relative flex min-h-11 shrink-0 items-center gap-2 rounded-full px-3.5 text-[14px] font-semibold tracking-[-0.01em] sm:px-5 sm:text-[16px] ${
-                  isActive ? 'text-portfolio-ink' : 'text-portfolio-muted hover:text-portfolio-ink'
+                  hasPill ? 'text-portfolio-ink' : 'text-portfolio-muted hover:text-portfolio-ink'
                 }`}
               >
-                <AnimatePresence>
-                  {isActive && (
+                <Icon className="relative size-[18px] shrink-0 text-current opacity-90 sm:size-5" />
+                <AnimatePresence initial={false}>
+                  {shouldShowLabel && (
                     <motion.span
-                      layoutId="nav-pill"
-                      className="absolute inset-0 rounded-full bg-portfolio-ink/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
-                      transition={{ type: 'spring', stiffness: 380, damping: 36 }}
-                    />
+                      key="label"
+                      className="relative overflow-hidden whitespace-nowrap"
+                      variants={isMobile ? mobileLabelVariants : undefined}
+                      initial={isMobile ? 'hidden' : false}
+                      animate={isMobile ? 'visible' : { opacity: 1, maxWidth: 150 }}
+                      exit={isMobile ? 'exit' : undefined}
+                    >
+                      {item.label}
+                    </motion.span>
                   )}
                 </AnimatePresence>
-                <Icon className="relative size-[18px] shrink-0 text-current opacity-90 sm:size-5" />
-                <span className="relative">{item.label}</span>
               </a>
             );
           })}
