@@ -38,9 +38,9 @@ export function SiteFooter() {
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(16,11,31,.74),rgba(10,6,19,0)_42%,rgba(16,11,31,.58))]" />
       <div className="relative mx-auto flex max-w-[1160px] flex-col justify-between gap-[clamp(54px,7vw,88px)]">
         <div className="grid gap-[clamp(42px,7vw,92px)] md:grid-cols-[minmax(260px,1fr)_minmax(390px,460px)] md:items-start">
-          <div className="max-w-[340px]">
-            <WordMark size="lg" bgColor="#0a0613" />
-            <p className="mt-2 ml-3 text-[15px] leading-[1.75] text-portfolio-muted">
+          <div className="max-w-[430px]">
+            <WordMark size="lg" variant="stacked" bgColor="#0a0613" />
+            <p className="mt-3 ml-3 text-[15px] leading-[1.75] text-portfolio-muted">
               Designer by eye, dev by hand. Currently in Lahti.
             </p>
           </div>

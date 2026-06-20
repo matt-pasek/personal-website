@@ -459,7 +459,7 @@ export default function FogSphere({
   densityGradient = false,
 }: FogSphereProps) {
   return (
-    <div className={cn('relative overflow-hidden', className)} style={{ width, height }}>
+    <div className={cn('relative overflow-hidden mix-blend-difference', className)} style={{ width, height }}>
       <Canvas
         className="absolute inset-0"
         dpr={[1, dpr]}
