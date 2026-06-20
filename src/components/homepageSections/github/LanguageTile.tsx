@@ -3,7 +3,11 @@
 import { Reveal } from '@/components/animated/Reveal';
 import { motion } from 'framer-motion';
 
-export function LanguageTile({ language }: { language: string }) {
+interface LanguageTileProps {
+  language: string;
+}
+
+export function LanguageTile({ language }: LanguageTileProps) {
   return (
     <Reveal className="min-h-[200px] min-w-[300px] flex-1 basis-[300px]">
       <div className="flex h-full flex-col justify-between rounded-[22px] border border-portfolio-green/20 bg-portfolio-surface-2 p-[clamp(24px,3vw,34px)]">

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import type { ReactNode } from 'react';
+import { useEffect, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { cn } from '@/lib/utils';
@@ -9,7 +10,7 @@ export interface FogSphereProps {
   width?: string | number;
   height?: string | number;
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   speed?: number;
   rotationSpeed?: number;
   rayMarchSteps?: number;
@@ -335,7 +336,7 @@ function ensureTargets(refs: PipelineRefs, w: number, h: number) {
   return next;
 }
 
-const FogPipeline: React.FC<PipelineProps> = (props) => {
+function FogPipeline(props: PipelineProps) {
   const { gl, size } = useThree();
 
   const refsContainer = useRef<PipelineRefs | null>(null);
@@ -427,9 +428,9 @@ const FogPipeline: React.FC<PipelineProps> = (props) => {
   }, 1);
 
   return null;
-};
+}
 
-const FogSphere: React.FC<FogSphereProps> = ({
+export default function FogSphere({
   width = '100%',
   height = '100%',
   className,
@@ -456,7 +457,7 @@ const FogSphere: React.FC<FogSphereProps> = ({
   axisTilt = 0,
   wobbleSpeed = 0.05,
   densityGradient = false,
-}) => {
+}: FogSphereProps) {
   return (
     <div className={cn('relative overflow-hidden', className)} style={{ width, height }}>
       <Canvas
@@ -493,8 +494,4 @@ const FogSphere: React.FC<FogSphereProps> = ({
       {children && <div className="relative z-10">{children}</div>}
     </div>
   );
-};
-
-FogSphere.displayName = 'FogSphere';
-
-export default FogSphere;
+}

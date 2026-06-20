@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useRef, useMemo } from 'react';
+import type { ReactNode } from 'react';
+import { useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { cn } from '@/lib/utils';
@@ -31,7 +32,7 @@ export interface LiquidBarsProps {
 
   opacity?: number;
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
 const combinedFragmentShader = `
@@ -342,7 +343,7 @@ function Scene({
   );
 }
 
-const LiquidBars: React.FC<LiquidBarsProps> = ({
+export default function LiquidBars({
   width = '100%',
   height = '100%',
   speed = 1,
@@ -366,7 +367,7 @@ const LiquidBars: React.FC<LiquidBarsProps> = ({
   opacity = 1,
   className,
   children,
-}) => {
+}: LiquidBarsProps) {
   const threeColor = useMemo(() => new THREE.Color(color), [color]);
 
   const widthStyle = typeof width === 'number' ? `${width}px` : width;
@@ -420,8 +421,4 @@ const LiquidBars: React.FC<LiquidBarsProps> = ({
       {children && <div className="pointer-events-none relative z-10 h-full w-full">{children}</div>}
     </div>
   );
-};
-
-LiquidBars.displayName = 'LiquidBars';
-
-export default LiquidBars;
+}

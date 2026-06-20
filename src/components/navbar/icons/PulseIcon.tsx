@@ -1,4 +1,8 @@
-export function PulseIcon({ className }: { className?: string }) {
+interface IconProps {
+  className?: string;
+}
+
+export function PulseIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path

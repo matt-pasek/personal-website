@@ -4,7 +4,12 @@ import { NowCodingResponse } from '@/types/now-coding';
 import { Reveal } from '@/components/animated/Reveal';
 import { motion } from 'framer-motion';
 
-export function LiveCodingCard({ data, active }: { data: NowCodingResponse | null; active: boolean }) {
+interface LiveCodingCardProps {
+  data: NowCodingResponse | null;
+  active: boolean;
+}
+
+export function LiveCodingCard({ data, active }: LiveCodingCardProps) {
   return (
     <Reveal className="flex min-w-[300px] flex-1 basis-[360px]" delay={0.08}>
       <motion.div

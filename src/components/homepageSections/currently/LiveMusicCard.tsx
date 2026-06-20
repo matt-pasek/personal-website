@@ -5,7 +5,12 @@ import { NowPlayingResponse } from '@/types/now-playing';
 import { Reveal } from '@/components/animated/Reveal';
 import Image from 'next/image';
 
-export function LiveMusicCard({ track, isPlaying }: { track: NowPlayingResponse | null; isPlaying: boolean }) {
+interface LiveMusicCardProps {
+  track: NowPlayingResponse | null;
+  isPlaying: boolean;
+}
+
+export function LiveMusicCard({ track, isPlaying }: LiveMusicCardProps) {
   const content = (
     <motion.div
       whileHover={{ y: -3 }}

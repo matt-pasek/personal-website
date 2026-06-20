@@ -1,4 +1,8 @@
-export function BriefcaseIcon({ className }: { className?: string }) {
+interface IconProps {
+  className?: string;
+}
+
+export function BriefcaseIcon({ className }: IconProps) {
   return (
     <svg className={className} viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path

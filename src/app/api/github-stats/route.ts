@@ -1,23 +1,20 @@
 import { NextResponse } from 'next/server';
-import {
-  ContributionDay,
-  GithubRepo,
-  GithubUser,
-  YearlyContributions,
-  resolveGithubStats,
-} from '@/app/api/github-stats/githubStats';
-import { GithubStatsResponse } from '@/types/github-stats';
+import type { ContributionDay, GithubRepo, GithubUser, YearlyContributions } from '@/app/api/github-stats/githubStats';
+import { resolveGithubStats } from '@/app/api/github-stats/githubStats';
+import type { GithubStatsResponse } from '@/types/github-stats';
 
 const GITHUB_USERNAME = 'matt-pasek';
 
 export const revalidate = 3600;
 
-const githubHeaders = (token?: string) => ({
-  Accept: 'application/vnd.github+json',
-  ...(token ? { Authorization: `Bearer ${token}` } : {}),
-});
+function githubHeaders(token?: string) {
+  return {
+    Accept: 'application/vnd.github+json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+}
 
-const fetchGithubJson = async <T>(url: string, token?: string): Promise<T> => {
+async function fetchGithubJson<T>(url: string, token?: string): Promise<T> {
   const res = await fetch(url, {
     headers: githubHeaders(token),
     next: { revalidate },
@@ -28,9 +25,9 @@ const fetchGithubJson = async <T>(url: string, token?: string): Promise<T> => {
   }
 
   return res.json() as Promise<T>;
-};
+}
 
-const fetchContributionYears = async (token: string) => {
+async function fetchContributionYears(token: string): Promise<number[]> {
   const res = await fetch('https://api.github.com/graphql', {
     method: 'POST',
     headers: {
@@ -61,9 +58,9 @@ const fetchContributionYears = async (token: string) => {
   };
 
   return raw.data?.user?.contributionsCollection?.contributionYears ?? [];
-};
+}
 
-const fetchYearlyContributions = async (token: string, year: number): Promise<YearlyContributions> => {
+async function fetchYearlyContributions(token: string, year: number): Promise<YearlyContributions> {
   const from = `${year}-01-01T00:00:00Z`;
   const to = `${year}-12-31T23:59:59Z`;
   const res = await fetch('https://api.github.com/graphql', {
@@ -118,14 +115,14 @@ const fetchYearlyContributions = async (token: string, year: number): Promise<Ye
     totalContributions: collection?.contributionCalendar?.totalContributions ?? null,
     days: collection?.contributionCalendar?.weeks?.flatMap((week) => week.contributionDays ?? []) ?? [],
   };
-};
+}
 
-const fetchAllYearlyContributions = async (token?: string) => {
+async function fetchAllYearlyContributions(token?: string): Promise<YearlyContributions[]> {
   if (!token) return [];
 
   const years = await fetchContributionYears(token);
   return Promise.all(years.map((year) => fetchYearlyContributions(token, year)));
-};
+}
 
 export async function GET(): Promise<NextResponse<GithubStatsResponse>> {
   const token = process.env.GITHUB_TOKEN;

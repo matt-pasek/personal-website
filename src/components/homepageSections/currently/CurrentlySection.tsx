@@ -8,6 +8,15 @@ import { Reveal } from '@/components/animated/Reveal';
 import { LiveMusicCard } from '@/components/homepageSections/currently/LiveMusicCard';
 import { LiveCodingCard } from '@/components/homepageSections/currently/LiveCodingCard';
 
+function fetchJson<T>(url: string): Promise<T | null> {
+  return fetch(url)
+    .then((response) => {
+      if (!response.ok) throw new Error(`${url} responded with ${response.status}`);
+      return response.json() as Promise<T>;
+    })
+    .catch(() => null);
+}
+
 export function CurrentlySectionRedesign() {
   const [track, setTrack] = useState<NowPlayingResponse | null>(null);
   const [coding, setCoding] = useState<NowCodingResponse | null>(null);
@@ -15,12 +24,8 @@ export function CurrentlySectionRedesign() {
   useEffect(() => {
     let cancelled = false;
     void Promise.all([
-      fetch('/api/now-playing')
-        .then((response) => response.json() as Promise<NowPlayingResponse>)
-        .catch(() => null),
-      fetch('/api/now-coding')
-        .then((response) => response.json() as Promise<NowCodingResponse>)
-        .catch(() => null),
+      fetchJson<NowPlayingResponse>('/api/now-playing'),
+      fetchJson<NowCodingResponse>('/api/now-coding'),
     ]).then(([trackData, codingData]) => {
       if (!cancelled) {
         setTrack(trackData);

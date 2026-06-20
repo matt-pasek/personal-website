@@ -64,7 +64,11 @@ void main() {
 }
 `;
 
-const BlobMesh = ({ isMobile }: { isMobile: boolean }) => {
+interface BlobMeshProps {
+  isMobile: boolean;
+}
+
+function BlobMesh({ isMobile }: BlobMeshProps) {
   const { updateState } = useBlobState();
 
   const SPEED = 0.001;
@@ -163,9 +167,9 @@ const BlobMesh = ({ isMobile }: { isMobile: boolean }) => {
       />
     </mesh>
   );
-};
+}
 
-const Blob = () => {
+export default function Blob() {
   const isMobile = useMediaQuery('(max-width: 767px)');
   const [isReady, setIsReady] = useState(false);
   const readyFrameRef = useRef<number | null>(null);
@@ -210,6 +214,4 @@ const Blob = () => {
       </Canvas>
     </div>
   );
-};
-
-export default Blob;
+}

@@ -1,4 +1,10 @@
-export function SectionLabel({ index, title, aside }: { index: string; title: string; aside?: string }) {
+interface SectionLabelProps {
+  index: string;
+  title: string;
+  aside?: string;
+}
+
+export function SectionLabel({ index, title, aside }: SectionLabelProps) {
   return (
     <div className="mb-[clamp(34px,5vw,56px)] flex items-center gap-[18px] font-mono text-xs tracking-[0.18em] text-portfolio-ink uppercase">
       <span className="text-portfolio-green">{index}</span>

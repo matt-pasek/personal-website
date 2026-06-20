@@ -1,6 +1,7 @@
 'use client';
 
-import React, { useEffect, useRef, useMemo, useCallback } from 'react';
+import type { ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import * as THREE from 'three';
 import { cn } from '@/lib/utils';
 
@@ -20,10 +21,10 @@ export interface ChromaWavesProps {
   opacity?: number;
   quality?: 'low' | 'medium' | 'high';
   className?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
-const ChromaWaves: React.FC<ChromaWavesProps> = ({
+export default function ChromaWaves({
   width = '100%',
   height = '100%',
   speed = 0.5,
@@ -40,7 +41,7 @@ const ChromaWaves: React.FC<ChromaWavesProps> = ({
   quality = 'high',
   className,
   children,
-}) => {
+}: ChromaWavesProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
   const startTimeRef = useRef<number>(0);
@@ -337,6 +338,7 @@ const ChromaWaves: React.FC<ChromaWavesProps> = ({
     opacity,
     quality,
     rgbColor,
+    rgbColor2,
     rgbBg,
   ]);
 
@@ -355,8 +357,4 @@ const ChromaWaves: React.FC<ChromaWavesProps> = ({
       {children && <div className="pointer-events-none relative z-10 h-full w-full">{children}</div>}
     </div>
   );
-};
-
-ChromaWaves.displayName = 'ChromaWaves';
-
-export default ChromaWaves;
+}

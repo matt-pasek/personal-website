@@ -1,11 +1,37 @@
 import { NextResponse } from 'next/server';
 import { NowCodingResponse } from '@/types/now-coding';
 
+type WakaTimeSummary = {
+  projects?: { name?: string | null }[];
+  languages?: { name?: string | null }[];
+  editors?: { name?: string | null }[];
+  grand_total?: {
+    text?: string | null;
+    total_seconds?: number | null;
+  } | null;
+};
+
+type WakaTimeSummaryResponse = {
+  data?: WakaTimeSummary[];
+};
+
+const fallbackNowCoding: NowCodingResponse = {
+  topProject: null,
+  topLanguage: null,
+  topEditor: null,
+  totalText: '0 mins',
+  totalSeconds: 0,
+};
+
+function noStoreJson(response: NowCodingResponse): NextResponse<NowCodingResponse> {
+  return NextResponse.json(response, { headers: { 'Cache-Control': 'no-store' } });
+}
+
 export async function GET(): Promise<NextResponse<NowCodingResponse>> {
   const apiKey = process.env.WAKATIME_API_KEY;
 
   if (!apiKey) {
-    throw new Error('WAKATIME_API_KEY not configured');
+    return noStoreJson(fallbackNowCoding);
   }
 
   const res = await fetch(`https://wakatime.com/api/v1/users/current/summaries?range=today&api_key=${apiKey}`, {
@@ -13,20 +39,17 @@ export async function GET(): Promise<NextResponse<NowCodingResponse>> {
   });
 
   if (!res.ok) {
-    throw new Error(`WakaTime API error: ${res.status}`);
+    return noStoreJson(fallbackNowCoding);
   }
 
-  const raw = await res.json();
+  const raw = (await res.json()) as WakaTimeSummaryResponse;
   const data = raw.data?.[0];
 
-  return NextResponse.json(
-    {
-      topProject: data?.projects?.[0]?.name ?? null,
-      topLanguage: data?.languages?.[0]?.name ?? null,
-      topEditor: data?.editors?.[0]?.name ?? null,
-      totalText: data?.grand_total?.text ?? '0 mins',
-      totalSeconds: data?.grand_total?.total_seconds ?? 0,
-    },
-    { headers: { 'Cache-Control': 'no-store' } },
-  );
+  return noStoreJson({
+    topProject: data?.projects?.[0]?.name ?? null,
+    topLanguage: data?.languages?.[0]?.name ?? null,
+    topEditor: data?.editors?.[0]?.name ?? null,
+    totalText: data?.grand_total?.text ?? fallbackNowCoding.totalText,
+    totalSeconds: data?.grand_total?.total_seconds ?? fallbackNowCoding.totalSeconds,
+  });
 }
