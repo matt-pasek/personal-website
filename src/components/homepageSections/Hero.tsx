@@ -75,7 +75,7 @@ export function Hero() {
         </motion.div>
       </motion.div>
 
-      <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3">
+      <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center">
         <div className="relative flex size-8 items-center justify-center">
           <span className="absolute size-1.5 rounded-full bg-portfolio-green shadow-[0_0_7px_#52c989]" />
           <motion.span
