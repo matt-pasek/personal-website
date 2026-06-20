@@ -1,5 +1,4 @@
 import { ChromeOverlay } from '@/components/ChromeOverlay';
-import { Navbar } from '@/components/navbar/Navbar';
 import { Hero } from '@/components/homepageSections/Hero';
 import { StatStatement } from '@/components/homepageSections/StatStatement';
 import { AboutSection } from '@/components/homepageSections/AboutSection';
@@ -19,7 +18,6 @@ import { GitHubSection } from '@/components/homepageSections/github/GithubSectio
 export default function Home() {
   return (
     <main className="relative w-full overflow-x-hidden bg-portfolio-bg text-portfolio-ink">
-      <Navbar />
       <ChromeOverlay />
       <Hero />
       <StatStatement />

@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, useMotionValueEvent, useScroll, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import { BriefcaseIcon } from '@/components/navbar/icons/BriefcaseIcon';
 import { AsteriskIcon } from '@/components/navbar/icons/AsteriskIcon';
 import { PulseIcon } from '@/components/navbar/icons/PulseIcon';
@@ -46,6 +47,9 @@ type PillBounds = {
 };
 
 export function Navbar() {
+  const pathname = usePathname();
+  const router = useRouter();
+  const isCaseStudy = pathname.startsWith('/work/');
   const { scrollY } = useScroll();
   const [pageHeight, setPageHeight] = useState(0);
 
@@ -207,70 +211,109 @@ export function Navbar() {
         aria-label="Primary"
         className="flex max-w-[calc(100vw-24px)] items-center overflow-x-auto rounded-full border border-portfolio-ink/10 bg-[#0c0915]/82 p-1.5 text-portfolio-muted shadow-[0_14px_42px_rgba(0,0,0,0.34),inset_0_1px_0_rgba(255,255,255,0.05)] backdrop-blur-xl [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <motion.div
-          style={{ width: wordmarkWidth, opacity: wordmarkOpacity }}
-          className="hidden h-11 overflow-hidden sm:block"
-        >
-          <a href="#home" className="flex h-full items-center" aria-label="Matt Pasek home">
-            <WordMark size="sm" bgColor="#0c0915" />
-          </a>
-        </motion.div>
-
-        <motion.span
-          style={{ opacity: separatorOpacity, marginInline: separatorMargin }}
-          className="hidden h-6 w-px shrink-0 bg-portfolio-ink/10 sm:block"
-          aria-hidden="true"
-        />
-
-        <div ref={tabRowRef} className="relative flex items-center gap-1">
-          {pillBounds && (
-            <motion.span
-              className="pointer-events-none absolute rounded-full bg-portfolio-ink/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
-              initial={false}
-              animate={{
-                x: pillBounds.x,
-                y: pillBounds.y,
-                width: pillBounds.width,
-                height: pillBounds.height,
-              }}
-              transition={{ type: 'spring', stiffness: 420, damping: 42, mass: 0.8 }}
-              aria-hidden="true"
-            />
-          )}
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const hasPill = (isMobile ? activePillHref : activeSection) === item.href;
-            const shouldShowLabel = !isMobile || (visibleLabelHref === item.href && labelIsVisible);
-            return (
+        <AnimatePresence mode="wait" initial={false}>
+          {isCaseStudy ? (
+            <motion.div
+              key="case-study-nav"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.22 } }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+              className="flex items-center gap-1 px-1"
+            >
               <a
-                ref={(node) => {
-                  itemRefs.current[item.href] = node;
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  router.back();
                 }}
-                key={item.href}
-                href={item.href}
-                className={`group relative flex min-h-11 shrink-0 items-center gap-2 rounded-full px-3.5 text-[14px] font-semibold tracking-[-0.01em] sm:px-5 sm:text-[16px] ${
-                  hasPill ? 'text-portfolio-ink' : 'text-portfolio-muted hover:text-portfolio-ink'
-                }`}
+                className="flex h-11 items-center"
+                aria-label="Matt Pasek home"
               >
-                <Icon className="relative size-[18px] shrink-0 text-current opacity-90 sm:size-5" />
-                <AnimatePresence initial={false}>
-                  {shouldShowLabel && (
-                    <motion.span
-                      key="label"
-                      className="relative overflow-hidden whitespace-nowrap"
-                      variants={isMobile ? mobileLabelVariants : undefined}
-                      initial={isMobile ? 'hidden' : false}
-                      animate={isMobile ? 'visible' : { opacity: 1, maxWidth: 150 }}
-                      exit={isMobile ? 'exit' : undefined}
-                    >
-                      {item.label}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                <WordMark size="sm" bgColor="#0c0915" />
               </a>
-            );
-          })}
-        </div>
+              <span className="mx-1 h-5 w-px bg-portfolio-ink/15" aria-hidden="true" />
+              <button
+                onClick={() => router.back()}
+                className="flex min-h-11 items-center rounded-full px-4 text-[14px] font-semibold text-portfolio-muted transition-colors hover:text-portfolio-ink sm:text-[16px]"
+              >
+                go back
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="main-nav"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1, transition: { duration: 0.22 } }}
+              exit={{ opacity: 0, transition: { duration: 0.15 } }}
+              className="flex items-center"
+            >
+              <motion.div
+                style={{ width: wordmarkWidth, opacity: wordmarkOpacity }}
+                className="hidden h-11 overflow-hidden sm:block"
+              >
+                <a href="#home" className="flex h-full items-center" aria-label="Matt Pasek home">
+                  <WordMark size="sm" bgColor="#0c0915" />
+                </a>
+              </motion.div>
+
+              <motion.span
+                style={{ opacity: separatorOpacity, marginInline: separatorMargin }}
+                className="hidden h-6 w-px shrink-0 bg-portfolio-ink/10 sm:block"
+                aria-hidden="true"
+              />
+
+              <div ref={tabRowRef} className="relative flex items-center gap-1">
+                {pillBounds && (
+                  <motion.span
+                    className="pointer-events-none absolute rounded-full bg-portfolio-ink/8 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]"
+                    initial={false}
+                    animate={{
+                      x: pillBounds.x,
+                      y: pillBounds.y,
+                      width: pillBounds.width,
+                      height: pillBounds.height,
+                    }}
+                    transition={{ type: 'spring', stiffness: 420, damping: 42, mass: 0.8 }}
+                    aria-hidden="true"
+                  />
+                )}
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const hasPill = (isMobile ? activePillHref : activeSection) === item.href;
+                  const shouldShowLabel = !isMobile || (visibleLabelHref === item.href && labelIsVisible);
+                  return (
+                    <a
+                      ref={(node) => {
+                        itemRefs.current[item.href] = node;
+                      }}
+                      key={item.href}
+                      href={item.href}
+                      className={`group relative flex min-h-11 shrink-0 items-center gap-2 rounded-full px-3.5 text-[14px] font-semibold tracking-[-0.01em] sm:px-5 sm:text-[16px] ${
+                        hasPill ? 'text-portfolio-ink' : 'text-portfolio-muted hover:text-portfolio-ink'
+                      }`}
+                    >
+                      <Icon className="relative size-[18px] shrink-0 text-current opacity-90 sm:size-5" />
+                      <AnimatePresence initial={false}>
+                        {shouldShowLabel && (
+                          <motion.span
+                            key="label"
+                            className="relative overflow-hidden whitespace-nowrap"
+                            variants={isMobile ? mobileLabelVariants : undefined}
+                            initial={isMobile ? 'hidden' : false}
+                            animate={isMobile ? 'visible' : { opacity: 1, maxWidth: 150 }}
+                            exit={isMobile ? 'exit' : undefined}
+                          >
+                            {item.label}
+                          </motion.span>
+                        )}
+                      </AnimatePresence>
+                    </a>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
     </motion.header>
   );

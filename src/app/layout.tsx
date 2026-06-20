@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './global.css';
 import { Fira_Sans, Fira_Mono } from 'next/font/google';
 import { BlobStateProvider } from '@/contexts/BlobStateContext';
+import { Navbar } from '@/components/navbar/Navbar';
 import { ReactNode } from 'react';
 import { Analytics } from '@vercel/analytics/next';
 
@@ -52,13 +53,19 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: ReactNode;
+  modal: ReactNode;
 }>) {
   return (
     <html lang="en">
       <body className={`${firaSans.variable} ${firaMono.variable} antialiased`}>
-        <BlobStateProvider>{children}</BlobStateProvider>
+        <BlobStateProvider>
+          <Navbar />
+          {children}
+          {modal}
+        </BlobStateProvider>
         <Analytics />
       </body>
     </html>
