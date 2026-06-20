@@ -65,7 +65,7 @@ export function LiveCodingCard({ data, active }: LiveCodingCardProps) {
             );
           })}
         </div>
-        <div className="flex items-baseline gap-2.5">
+        <div className="flex flex-wrap-reverse items-baseline gap-2.5">
           <span className="font-mono text-[28px] font-medium text-portfolio-ink tabular-nums">
             {active ? data?.totalText : '0m'}
           </span>

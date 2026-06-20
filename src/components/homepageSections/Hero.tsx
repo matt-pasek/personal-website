@@ -69,20 +69,32 @@ export function Hero() {
               <span className="text-portfolio-green">by hand</span>.
             </div>
             <div className="mt-2 font-mono text-[11px] tracking-[0.14em] text-portfolio-muted uppercase">
-              available for projects · finland
+              ↳ available for projects · finland
             </div>
           </div>
         </motion.div>
       </motion.div>
 
-      <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1.5">
-        <span className="font-mono text-[10px] tracking-[0.24em] text-portfolio-green/70 uppercase">scroll</span>
-        <span className="block size-3.5 animate-[nudge_1.8s_ease-in-out_infinite] border-r-[1.5px] border-b-[1.5px] border-portfolio-green/60" />
+      <div className="absolute bottom-10 left-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-3">
+        <div className="relative flex size-8 items-center justify-center">
+          <span className="absolute size-1.5 rounded-full bg-portfolio-green shadow-[0_0_7px_#52c989]" />
+          <motion.span
+            className="absolute size-8 rounded-full border border-portfolio-green/50"
+            animate={{ scale: [0.25, 1], opacity: [0.7, 0] }}
+            transition={{ duration: 1.9, ease: 'easeOut', repeat: Infinity }}
+          />
+          <motion.span
+            className="absolute size-8 rounded-full border border-portfolio-green/50"
+            animate={{ scale: [0.25, 1], opacity: [0.7, 0] }}
+            transition={{ duration: 1.9, ease: 'easeOut', repeat: Infinity, delay: 0.95 }}
+          />
+        </div>
+        <span className="font-mono text-[10px] tracking-[0.24em] text-portfolio-green/55 uppercase">scroll</span>
       </div>
 
       <div className="absolute bottom-[26px] left-10 z-10 hidden items-center gap-2 font-mono text-[10.5px] tracking-[0.12em] text-portfolio-faint uppercase md:flex">
         <span className="size-1.5 rounded-full bg-portfolio-green shadow-[0_0_8px_#52c989]" />
-        aurora · handmade
+        no agency · just me
       </div>
     </section>
   );

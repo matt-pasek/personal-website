@@ -54,13 +54,11 @@ export function LiveMusicCard({ track, isPlaying }: LiveMusicCardProps) {
         <span className="text-portfolio-faint">{track?.scrobbledSongs ? `${track.scrobbledSongs} plays` : 'live'}</span>
       </div>
       {track?.listeningTimeText && (
-        <div className="mt-4 flex items-baseline gap-2.5">
+        <div className="mt-4 flex flex-wrap-reverse items-baseline gap-2.5">
           <span className="font-mono text-[28px] font-medium text-portfolio-ink tabular-nums">
             {track.listeningTimeText}
           </span>
-          <span className="font-mono text-[11px] tracking-[0.12em] text-portfolio-muted uppercase">
-            today · {isPlaying ? 'live' : 'last.fm'}
-          </span>
+          <span className="font-mono text-[11px] tracking-[0.12em] text-portfolio-muted uppercase">today · live</span>
         </div>
       )}
     </motion.div>

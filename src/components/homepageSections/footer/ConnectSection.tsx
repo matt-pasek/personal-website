@@ -80,8 +80,10 @@ export function ConnectSection() {
                     />
                   </svg>
                 </span>
-                <span className="min-w-0 flex-1 truncate text-portfolio-muted">contact@matt-pasek.dev</span>
-                <span className="ml-4 inline-flex min-h-10 shrink-0 items-center gap-2 rounded-xl bg-portfolio-connect-card px-4 text-portfolio-bg sm:px-6">
+                <span className="hidden min-w-0 flex-1 truncate text-portfolio-muted sm:block">
+                  contact@matt-pasek.dev
+                </span>
+                <span className="ml-4 inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-xl bg-portfolio-connect-card px-4 text-portfolio-bg sm:flex-initial sm:px-6">
                   Say hello <span className="text-portfolio-green-dark">→</span>
                 </span>
               </motion.a>
