@@ -1,32 +1,27 @@
 import { NextResponse } from 'next/server';
 import { NowCodingResponse } from '@/types/now-coding';
+import { buildNowCodingResponse, fallbackNowCoding, WakaTimeSummaryResponse } from './nowCoding';
+
+function noStoreJson(response: NowCodingResponse): NextResponse<NowCodingResponse> {
+  return NextResponse.json(response, { headers: { 'Cache-Control': 'no-store' } });
+}
 
 export async function GET(): Promise<NextResponse<NowCodingResponse>> {
   const apiKey = process.env.WAKATIME_API_KEY;
 
   if (!apiKey) {
-    throw new Error('WAKATIME_API_KEY not configured');
+    return noStoreJson(fallbackNowCoding);
   }
 
-  const res = await fetch(`https://wakatime.com/api/v1/users/current/summaries?range=today&api_key=${apiKey}`, {
+  const res = await fetch(`https://wakatime.com/api/v1/users/current/summaries?range=last_7_days&api_key=${apiKey}`, {
     cache: 'no-store',
   });
 
   if (!res.ok) {
-    throw new Error(`WakaTime API error: ${res.status}`);
+    return noStoreJson(fallbackNowCoding);
   }
 
-  const raw = await res.json();
-  const data = raw.data?.[0];
+  const raw = (await res.json()) as WakaTimeSummaryResponse;
 
-  return NextResponse.json(
-    {
-      topProject: data?.projects?.[0]?.name ?? null,
-      topLanguage: data?.languages?.[0]?.name ?? null,
-      topEditor: data?.editors?.[0]?.name ?? null,
-      totalText: data?.grand_total?.text ?? '0 mins',
-      totalSeconds: data?.grand_total?.total_seconds ?? 0,
-    },
-    { headers: { 'Cache-Control': 'no-store' } },
-  );
+  return noStoreJson(buildNowCodingResponse(raw));
 }

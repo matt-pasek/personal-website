@@ -8,4 +8,5 @@ export interface NowPlayingResponse {
   scrobbledSongs: string;
   playedDate?: string;
   songUrl: string;
+  listeningTimeText?: string;
 }
